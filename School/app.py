@@ -28,6 +28,35 @@ def login():
     # If they are just visiting the page (GET request), show the login form
     return render_template('login.html')
 
+# --- PROTECTED ROUTE: STUDENT AREA ---
+@app.route('/student')
+def student_dashboard():
+    # 1. Check if they are logged in. 2. Check if their role is exactly 'student'.
+    if 'role' not in session or session['role'] != 'student':
+        # If they fail the check, boot them out!
+        flash("Access Denied: You must be logged in as a Student to view this page.")
+        return redirect(url_for('login'))
+        
+    return render_template('student_dashboard.html', username=session['username'])
+
+# --- PROTECTED ROUTE: STAFF AREA ---
+@app.route('/staff')
+def staff_dashboard():
+    # 1. Check if they are logged in. 2. Check if their role is exactly 'staff'.
+    if 'role' not in session or session['role'] != 'staff':
+        # If they fail the check, boot them out!
+        flash("Access Denied: You must be logged in as Staff to view this page.")
+        return redirect(url_for('login'))
+        
+    return render_template('staff_dashboard.html', username=session['username'])
+
+# --- LOGOUT ROUTE ---
+@app.route('/logout')
+def logout():
+    session.clear() # This deletes everything in the session vault
+    flash("You have been safely logged out.")
+    return redirect(url_for('login'))
+
 if __name__ == '__main__':
     # Start the web server in debug mode so it updates when you change code
     app.run(debug=True)
