@@ -12,10 +12,14 @@ def login():
         # Grab the data the user typed into the form
         username = request.form['username']
         password = request.form['password']
+        role = request.form.get('role', 'student') # Defaults to student if empty
         
         # Check if the credentials match our dummy data
         if username == 'student' and password == 'password123':
             return render_template('dashboard.html', username=username)
+        
+        elif role == 'staff' and username == 'staff' and password == 'password123':
+            return render_template('dashboard.html', username=username, role=role)
         else:
             # If wrong, send an error message back to the page
             flash('Invalid username or password. Please try again.')
