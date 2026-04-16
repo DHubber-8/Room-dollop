@@ -19,7 +19,7 @@ def login():
             return render_template('dashboard.html', username=username)
         
         elif role == 'staff' and username == 'staff' and password == 'password123':
-            return render_template('dashboard.html', username=username, role=role)
+            return render_template('staff_dashboard.html', username=username, role=role)
         else:
             # If wrong, send an error message back to the page
             flash('Invalid username or password. Please try again.')
@@ -37,7 +37,7 @@ def student_dashboard():
         flash("Access Denied: You must be logged in as a Student to view this page.")
         return redirect(url_for('login'))
         
-    return render_template('student_dashboard.html', username=session['username'])
+    return render_template('dashboard.html', username=session['username'])
 
 # --- PROTECTED ROUTE: STAFF AREA ---
 @app.route('/staff')
