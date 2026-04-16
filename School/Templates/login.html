@@ -58,15 +58,15 @@
 
     <div class="login-container">
         <h2>School Portal</h2>
-        
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-              <div class="error-message">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-
+        <!--
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="error-message">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    -->
         <form method="POST" action="/">
             <div class="form-group">
                 <label for="username">Student / Staff ID:</label>
