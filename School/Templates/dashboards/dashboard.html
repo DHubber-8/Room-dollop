@@ -1,41 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UOW Student Portal</title>
-    <style>
-        /* This is internal CSS - much cleaner! */
-        body {
-            text-align: center;
-            margin-top: 50px;
-            font-family: Arial, sans-serif;
-            background-color: #e6f2ff;
-        }
-        .portal-header {
-            color: #2b4cc7;
-        }
-        .logout-btn {
-            color: red;
-            text-decoration: none;
-            font-weight: bold;
-            border: 1px solid red;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-        .logout-btn:hover {
-            background-color: red;
-            color: white;
-        }
-    </style>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
 </head>
-<body>
+<body class="bg-gray-50">
 
-    <h2 class="portal-header">Student Portal</h2>
-    <p>Welcome back, {{ username }}! Here you can book your rooms for use.</p>
+    <aside id="default-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+       <div class="flex flex-col justify-between h-full px-3 py-4 overflow-y-auto bg-white border-r border-gray-200 shadow-sm">
+          
+          <div>
+              <div class="flex items-center p-4 mb-4 text-gray-900 rounded-lg bg-blue-50 border border-blue-100">
+                  <div class="w-10 h-10 rounded-full bg-blue-700 flex items-center justify-center text-white font-bold text-lg">
+                      {{ username[0]|upper if username else 'U' }}
+                  </div>
+                  <div class="ms-3">
+                      <p class="text-sm font-bold text-gray-900">{{ username }}</p>
+                      <p class="text-xs text-gray-500">ID: {{ student_id }}</p>
+                  </div>
+              </div>
 
-    <a href="/logout" class="logout-btn">Log out</a>
+              <ul class="space-y-2 font-medium">
+                 <li>
+                    <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg bg-gray-100 group">
+                       <svg class="w-5 h-5 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+                          <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
+                          <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
+                       </svg>
+                       <span class="ms-3">Dashboard</span>
+                    </a>
+                 </li>
+                 <li>
+                    <a href="/profile" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                       <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
+                       </svg>
+                       <span class="flex-1 ms-3 whitespace-nowrap">My Profile</span>
+                    </a>
+                 </li>
+                 <li>
+                    <a href="/logout" class="flex items-center p-2 text-red-600 rounded-lg hover:bg-red-50 group mt-4 border border-transparent hover:border-red-200 transition-all">
+                       <svg class="flex-shrink-0 w-5 h-5 text-red-500 transition duration-75 group-hover:text-red-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"/>
+                       </svg>
+                       <span class="flex-1 ms-3 whitespace-nowrap">Log out</span>
+                    </a>
+                 </li>
+              </ul>
+          </div>
 
-    <script>
-        console.log("Dashboard loaded for {{ username }}");
-    </script>
+          <div class="mt-8 border-t border-gray-200 pt-4 pb-2">
+              <div class="flex items-center px-2">
+                  <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/77/University_of_Wollongong_seal.svg/150px-University_of_Wollongong_seal.svg.png" alt="UOW Logo" class="w-10 h-10 mr-3">
+                  <div class="text-left">
+                      <p class="text-xs font-bold text-gray-800 leading-tight">University of</p>
+                      <p class="text-xs font-bold text-blue-700 leading-tight">Wollongong</p>
+                  </div>
+              </div>
+          </div>
+       </div>
+    </aside>
+
+    <div class="p-4 sm:ml-64">
+       <div class="p-8 rounded-lg mt-4 font-sans max-w-6xl mx-auto">
+           
+           <div class="mb-8">
+               <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Service Booking Dashboard</h2>
+               <p class="text-lg text-gray-600">
+                   Welcome back, <span class="font-bold text-blue-700">{{ username }}</span>. Select a service below to manage your bookings.
+               </p>
+           </div>
+
+           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+               
+               <a href="#" class="block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-300 transition-all hover:-translate-y-1">
+                   <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                       <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                   </div>
+                   <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900">Library Study Rooms</h5>
+                   <p class="font-normal text-gray-600 text-sm">Reserve quiet spaces or collaborative rooms in the main library.</p>
+               </a>
+
+               <a href="#" class="block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-green-300 transition-all hover:-translate-y-1">
+                   <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                       <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                   </div>
+                   <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900">Lab Equipment</h5>
+                   <p class="font-normal text-gray-600 text-sm">Book technical equipment and dedicated lab computers for your faculty.</p>
+               </a>
+
+               <a href="#" class="block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-purple-300 transition-all hover:-translate-y-1">
+                   <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                       <svg class="w-6 h-6 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+                   </div>
+                   <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900">Consultation Rooms</h5>
+                   <p class="font-normal text-gray-600 text-sm">Schedule a private room for meetings with tutors or student groups.</p>
+               </a>
+
+           </div>
+       </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 </body>
 </html>
