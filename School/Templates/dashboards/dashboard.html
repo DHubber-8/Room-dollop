@@ -1,10 +1,41 @@
 <!DOCTYPE html>
 <html>
-<head><title>UOW Student Portal</title></head>
-<body style="text-align: center; margin-top: 50px; font-family: Arial; background-color: #e6f2ff;">
-    <h2 style="color: #2b4cc7;">Student Portal</h2>
-    <p>Welcome back, {{ username }}! Here are your classes and grades.</p>
-    
-    <a href="/logout" style="color: red;">Log out</a>
+<head>
+    <title>UOW Student Portal</title>
+    <style>
+        /* This is internal CSS - much cleaner! */
+        body {
+            text-align: center;
+            margin-top: 50px;
+            font-family: Arial, sans-serif;
+            background-color: #e6f2ff;
+        }
+        .portal-header {
+            color: #2b4cc7;
+        }
+        .logout-btn {
+            color: red;
+            text-decoration: none;
+            font-weight: bold;
+            border: 1px solid red;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .logout-btn:hover {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 class="portal-header">Student Portal</h2>
+    <p>Welcome back, {{ username }}! Here you can book your rooms for use.</p>
+
+    <a href="/logout" class="logout-btn">Log out</a>
+
+    <script>
+        console.log("Dashboard loaded for {{ username }}");
+    </script>
 </body>
 </html>

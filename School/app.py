@@ -16,10 +16,10 @@ def login():
         
         # Check if the credentials match our dummy data
         if username == 'student' and password == 'password123':
-            return render_template('dashboard.html', username=username)
+            return render_template('dashboards/dashboard.html', username=username)
         
         elif role == 'staff' and username == 'staff' and password == 'password123':
-            return render_template('staff_dashboard.html', username=username, role=role)
+            return render_template('dashboards/staff_dashboard.html', username=username, role=role)
         else:
             # If wrong, send an error message back to the page
             flash('Invalid username or password. Please try again.')
@@ -37,7 +37,7 @@ def student_dashboard():
         flash("Access Denied: You must be logged in as a Student to view this page.")
         return redirect(url_for('login'))
         
-    return render_template('dashboard.html', username=session['username'])
+    return render_template('dashboards/dashboard.html', username=session['username'])
 
 # --- PROTECTED ROUTE: STAFF AREA ---
 @app.route('/staff')
@@ -48,7 +48,7 @@ def staff_dashboard():
         flash("Access Denied: You must be logged in as Staff to view this page.")
         return redirect(url_for('login'))
         
-    return render_template('staff_dashboard.html', username=session['username'])
+    return render_template('dashboards/staff_dashboard.html', username=session['username'])
 
 # --- LOGOUT ROUTE ---
 @app.route('/logout')
@@ -60,3 +60,4 @@ def logout():
 if __name__ == '__main__':
     # Start the web server in debug mode so it updates when you change code
     app.run(debug=True)
+    
