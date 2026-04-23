@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Booking Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Theme.css') }}">
+</head>
+<body class="dashboard-body">
+
+    <header class="dash-top-bar">
+        <div class="dash-logo">Logo</div>
+        <h2 class="dash-title">Student Booking</h2>
+        <div class="dash-nav-items">
+            <span>Tab 1</span>
+            <span>Tab 2</span>
+            <span>Tab 3</span>
+            <button class="outline-btn">Button</button>
+            <a href="/logout" class="solid-btn" style="text-decoration: none;">Logout</a>
+        </div>
+    </header>
+
+    <div class="dash-layout">
+        <aside class="dash-sidebar">
+            <ul class="nav-list">
+                <li class="active">Nav Item 1</li>
+                <li>Nav Item 2</li>
+                <li>Nav Item 3</li>
+                <li>Nav Item 4</li>
+            </ul>
+        </aside>
+
+        <main class="dash-main-content">
+            
+            <div class="filter-section">
+                <label for="roomFilter" style="font-weight:bold; margin-right: 10px;">Filter: </label>
+                <select id="roomFilter" onchange="filterRooms()">
+                    <option value="All">All Rooms</option>
+                    <option value="Lecture Halls">Lecture Halls</option>
+                    <option value="Multipurpose Halls">Multipurpose Halls</option>
+                    <option value="Computer Labs">Computer Labs</option>
+                    <option value="Study Rooms">Study Rooms</option>
+                </select>
+            </div>
+
+            <div class="card-grid" id="roomContainer">
+                
+                {% for room in rooms %}
+                <div class="room-card" data-category="{{ room.category }}">
+                    <div class="card-image-placeholder">
+                        🖼️
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-room-title">{{ room.name }}</h3>
+                        <p class="card-room-time">{{ room.time }}</p>
+                        <p class="card-room-desc">{{ room.desc }}</p>
+                        <button class="solid-btn">Book</button>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-logo">UOW</div>
+        <div class="footer-bottom">
+            <div>Copyright 2022 Company Name.</div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Cookie Policy</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function filterRooms() {
+            // 1. Get the category the user just selected
+            const selectedCategory = document.getElementById('roomFilter').value;
+            
+            // 2. Get all the room cards on the page
+            const cards = document.querySelectorAll('.room-card');
+
+            // 3. Loop through each card
+            cards.forEach(card => {
+                // Read the hidden category we attached to the card
+                const cardCategory = card.getAttribute('data-category');
+
+                // If "All" is selected OR the card matches the choice, show it. Otherwise, hide it.
+                if (selectedCategory === "All" || selectedCategory === cardCategory) {
+                    card.style.display = "flex"; // Show card
+                } else {
+                    card.style.display = "none"; // Hide card
+                }
+            });
+        }
+    </script>
+</body>
+</html>
