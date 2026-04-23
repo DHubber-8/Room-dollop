@@ -82,6 +82,57 @@ def staff_dashboard():
         
     return render_template('dashboards/staff_dashboard.html', username=session['username'])
 
+
+# --- PROTECTED ROUTE: STAFF DASH ---
+app.secret_key = "uow_staff_secret_key"
+
+# Sample Data simulating existing rooms
+EXISTING_ROOMS = [
+    {"id": 1, "name": "Lecture Theatre 1", "type": "lecture", "desc": "Large capacity theatre.", "capacity": 200},
+    {"id": 2, "name": "Computer Lab A", "type": "lab", "desc": "High-end workstations.", "capacity": 30},
+    {"id": 3, "name": "Quiet Zone 4", "type": "study", "desc": "Individual study pods.", "capacity": 1}
+]
+
+# Common user data for the sidebar
+USER_INFO = {
+    "username": "Staff Member",
+    "id": "STAFF001",
+    "role": "staff" # Crucial for future access control
+}
+
+@app.route('/')
+def index():
+    # Redirect to the main staff dashboard grid by default
+    return redirect(url_for('staff_dashboard'))
+
+@app.route('/staff/dashboard')
+def staff_dashboard():
+    """
+    Corresponds to image_5.png (Staff Room Creation Grid).
+    Shows the grid of existing rooms.
+    """
+    return render_template('staff_grid.html', 
+                           rooms=EXISTING_ROOMS, 
+                           user=USER_INFO,
+                           title="Staff Room Creation")
+
+@app.route('/staff/create-room', methods=['GET', 'POST'])
+def create_room():
+    """
+    Corresponds to image_6.png (Room Creation Form).
+    GET: Shows the blank form.
+    POST: Simulates saving the data and redirects back to the grid.
+    """
+    if request.method == 'POST':
+        # Simulate saving the data from the form
+        room_name = request.form.get('room_name')
+        flash(f"Room '{room_name}' has been simulated as created!", "success")
+        return redirect(url_for('staff_dashboard'))
+        
+    return render_template('staff_form.html', 
+                           user=USER_INFO,
+                           title="Room Creation Form")
+    
 # --- LOGOUT ROUTE ---
 @app.route('/logout')
 def logout():
