@@ -39,6 +39,38 @@ def student_dashboard():
         
     return render_template('dashboards/dashboard.html', username=session['username'])
 
+# -- PROTECTED ROUTE: STUDENT DASH ---
+ROOMS = [
+    {"id": 1, "name": "Lecture Theatre 1", "type": "lecture", "desc": "Large capacity theatre for presentations."},
+    {"id": 2, "name": "Computer Lab A", "type": "lab", "desc": "Equipped with high-end workstations."},
+    {"id": 3, "name": "Main Hall", "type": "multipurpose", "desc": "Open space for events and gatherings."},
+    {"id": 4, "name": "Quiet Zone 4", "type": "study", "desc": "Individual study pods with power outlets."},
+    {"id": 5, "name": "Science Lab B", "type": "lab", "desc": "Chemistry equipment and safety stations."},
+    {"id": 6, "name": "Study Room 2", "type": "study", "desc": "Group discussion table and whiteboard."}
+]
+
+@app.route('/')
+def dashboard():
+    room_type = request.args.get('type', 'all')
+    
+    # Filtering logic
+    if room_type == 'all' or not room_type:
+        filtered_rooms = ROOMS
+    else:
+        filtered_rooms = [r for r in ROOMS if r['type'] == room_type]
+        
+    return render_template('dashboard.html', 
+                           rooms=filtered_rooms, 
+                           current_filter=room_type,
+                           username="Student John Doe", 
+                           student_id="7654321")
+
+@app.route('/book/<int:room_id>')
+def book_room(room_id):
+    # Success message for booking
+    flash(f"Room {room_id} has been successfully booked!")
+    return redirect(url_for('dashboard'))
+
 # --- PROTECTED ROUTE: STAFF AREA ---
 @app.route('/staff')
 def staff_dashboard():
