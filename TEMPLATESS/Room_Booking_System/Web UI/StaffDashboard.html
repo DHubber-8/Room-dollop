@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Booking Dashboard</title>
+    <title>Staff Room Creation</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='Theme.css') }}">
 </head>
 <body class="dashboard-body">
 
     <header class="dash-top-bar">
         <div class="dash-logo">Logo</div>
-        <h2 class="dash-title">Student Booking</h2>
+        <h2 class="dash-title">Staff Room Creation</h2>
         <div class="dash-nav-items">
-            <button class="outline-btn">Cart</button>
+            <span>Tab 1</span>
+            <button class="outline-btn">Button</button>
             <a href="/logout" class="solid-btn" style="text-decoration: none;">Logout</a>
         </div>
     </header>
@@ -21,7 +22,7 @@
         <aside class="dash-sidebar">
             <ul class="nav-list">
                 <li class="active">Main</li>
-                <li>Reservations</li>
+                <li>Created</li>
                 <li>Profile</li>
                 <li>Setting</li>
             </ul>
@@ -29,33 +30,42 @@
 
         <main class="dash-main-content">
             
-            <div class="filter-section">
-                <label for="roomFilter" style="font-weight:bold; margin-right: 10px;">Filter: </label>
-                <select id="roomFilter" onchange="filterRooms()">
-                    <option value="All">All Rooms</option>
-                    <option value="Lecture Halls">Lecture Halls</option>
-                    <option value="Multipurpose Halls">Multipurpose Halls</option>
-                    <option value="Computer Labs">Computer Labs</option>
-                    <option value="Study Rooms">Study Rooms</option>
-                </select>
+            <div class="section-header">
+                <h3>Draft</h3>
+                <button class="solid-btn">+ Create</button>
+            </div>
+            
+            <div class="draft-container">
+                <div class="draft-slot">Slot</div>
+                <div class="draft-slot">Slot</div>
             </div>
 
-            <div class="card-grid" id="roomContainer">
+            <div class="section-header" style="margin-top: 40px;">
+                <h3>Created</h3>
                 
+                <div class="filter-wrapper">
+                    <label for="roomFilter" style="font-weight:bold; margin-right: 10px;">Filter: </label>
+                    <select id="roomFilter" onchange="filterRooms()">
+                        <option value="All">All Rooms</option>
+                        <option value="Lecture Halls">Lecture Halls</option>
+                        <option value="Computer Labs">Computer Labs</option>
+                        <option value="Study Rooms">Study Rooms</option>
+                        <option value="Multipurpose Hall">Multipurpose Halls</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card-grid" id="roomContainer" style="margin-top: 20px;">
                 {% for room in rooms %}
                 <div class="room-card" data-category="{{ room.category }}">
-                    <div class="card-image-placeholder">
-                        🖼️
-                    </div>
+                    <div class="card-image-placeholder">🖼️</div>
                     <div class="card-details">
                         <h3 class="card-room-title">{{ room.name }}</h3>
-                        <p class="card-room-time">{{ room.time }}</p>
                         <p class="card-room-desc">{{ room.desc }}</p>
-                        <button class="solid-btn">Book</button>
+                        <button class="solid-btn">Edit</button>
                     </div>
                 </div>
                 {% endfor %}
-
             </div>
         </main>
     </div>
@@ -75,22 +85,15 @@
 
     <script>
         function filterRooms() {
-            // 1. Get the category the user just selected
             const selectedCategory = document.getElementById('roomFilter').value;
-            
-            // 2. Get all the room cards on the page
             const cards = document.querySelectorAll('.room-card');
 
-            // 3. Loop through each card
             cards.forEach(card => {
-                // Read the hidden category we attached to the card
                 const cardCategory = card.getAttribute('data-category');
-
-                // If "All" is selected OR the card matches the choice, show it. Otherwise, hide it.
                 if (selectedCategory === "All" || selectedCategory === cardCategory) {
-                    card.style.display = "flex"; // Show card
+                    card.style.display = "flex";
                 } else {
-                    card.style.display = "none"; // Hide card
+                    card.style.display = "none";
                 }
             });
         }

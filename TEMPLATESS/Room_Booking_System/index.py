@@ -21,18 +21,18 @@ def home():
         if role == 'student' and student_system.check_student_login(username, password):
             session['username'] = username
             session['role'] = 'student'
-            return redirect(url_for('student_dashboard')) # We can link a real page later
+            return redirect(url_for('student_dashboard')) # can link a real page later
             
         elif role == 'staff' and staff_system.check_staff_login(username, password):
             session['username'] = username
             session['role'] = 'staff'
-            return redirect(url_for('staff_dashboard')) # We can link a real page later
+            return redirect(url_for('staff_dashboard')) # can link a real page later
             
         else:
             flash(f'Invalid {role} username or password. Please try again.')
             return redirect(url_for('home'))
             
-    # Pointing to Home.html inside your Web UI folder
+    # Pointing to Home.html inside  Web UI folder
     return render_template('Home.html') 
 
 
@@ -47,6 +47,17 @@ def student_dashboard():
 
     return render_template('StudentDashboard.html', username=session['username'], rooms=rooms_database)
 
+
+@app.route('/staff_dashboard')
+def staff_dashboard():
+    # Security check: Ensure the user is actually logged in as a staff
+    if 'role' not in session or session['role'] != 'staff':
+        flash("Access Denied: You must be logged in as a Staff to view this page.")
+        return redirect(url_for('home'))
+    
+    rooms_database = staff_system.get_all_rooms()
+    
+    return render_template('StaffDashboard.html', username=session['username'], rooms=rooms_database)
 
 if __name__ == '__main__':
     app.run(debug=True)

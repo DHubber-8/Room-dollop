@@ -324,3 +324,37 @@
     font-size: 14px;
     flex-grow: 1; /* Pushes the button to the bottom */
 }
+
+/* --- STAFF DASHBOARD SPECIFIC STYLES --- */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e0e5ed;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: -20px;
+}
+
+.section-header h3 {
+    margin: 0;
+    color: #2c3549;
+    font-size: 24px;
+}
+
+/* Draft Slots */
+.draft-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.draft-slot {
+    border: 2px dashed #c0c7d6;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    color: #8c96a8;
+    font-size: 16px;
+    background-color: #f9fafc;
+}
