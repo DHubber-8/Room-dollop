@@ -108,7 +108,6 @@ def index():
 @app.route('/staff/dashboard')
 def staff_dashboard():
     """
-    Corresponds to image_5.png (Staff Room Creation Grid).
     Shows the grid of existing rooms.
     """
     return render_template('staff_grid.html', 
@@ -119,7 +118,6 @@ def staff_dashboard():
 @app.route('/staff/create-room', methods=['GET', 'POST'])
 def create_room():
     """
-    Corresponds to image_6.png (Room Creation Form).
     GET: Shows the blank form.
     POST: Simulates saving the data and redirects back to the grid.
     """
