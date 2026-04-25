@@ -5,7 +5,7 @@ from Logic.Student.Student import Student
 from Logic.Staff.Staff import Staff
 
 app = Flask(__name__, template_folder='Web UI', static_folder='Web UI')
-app.secret_key = "super_secret_school_key" 
+app.secret_key = "super_secret_school_key"
 
 student_system = Student()
 staff_system = Staff()
@@ -17,7 +17,6 @@ def home():
         password = request.form['password']
         role = request.form.get('role', 'student') 
         
-        # 3. Use your imported functions to check the login
         if role == 'student' and student_system.check_student_login(username, password):
             session['username'] = username
             session['role'] = 'student'
@@ -28,13 +27,7 @@ def home():
             session['role'] = 'staff'
             return redirect(url_for('staff_dashboard')) # can link a real page later
             
-        else:
-            flash(f'Invalid {role} username or password. Please try again.')
-            return redirect(url_for('home'))
-            
-    # Pointing to Home.html inside  Web UI folder
-    return render_template('Home.html') 
-
+    return render_template('Home.html')
 
 @app.route('/student_dashboard')
 def student_dashboard():
