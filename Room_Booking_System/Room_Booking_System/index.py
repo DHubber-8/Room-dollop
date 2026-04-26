@@ -52,5 +52,22 @@ def staff_dashboard():
     
     return render_template('StaffDashboard.html', username=session['username'], rooms=rooms_database)
 
+# --- LOGOUT ROUTE ---
+@app.route('/logout')
+def logout():
+    # 1. Remove the user's data from the session dictionary
+    # The 'None' part just prevents an error if the data is already gone
+    session.pop('username', None)
+    session.pop('role', None)
+    
+    # Note: If you want to completely wipe the entire cookie at once, 
+    # you can just use `session.clear()` instead of the pop lines above!
+
+    # 2. Add a friendly message
+    flash("You have been successfully logged out.")
+
+    # 3. "Loopback" to the login page
+    return redirect(url_for('home'))
+
 if __name__ == '__main__':
     app.run(debug=True)
