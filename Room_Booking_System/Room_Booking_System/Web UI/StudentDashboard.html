@@ -20,16 +20,24 @@
     <div class="dash-layout">
         <aside class="dash-sidebar">
             <ul class="nav-list">
-                <li class="active"><a href="/student_dashboard" style="text-decoration: none; color: inherit; display: block; width: 100%;">Main</a></li>
-                <li><a href="/reservations" style="text-decoration: none; color: inherit; display: block; width: 100%;">Reservations</a></li>
-                <li><a href="/profile" style="text-decoration: none; color: inherit; display: block; width: 100%;">Profile</a></li>
-                <li><a href="/settings" style="text-decoration: none; color: inherit; display: block; width: 100%;">Setting</a></li>
+                <li class="nav-item active">
+                    <a href="#" onclick="switchView('home-view', this)" style="text-decoration: none; color: inherit; display: block;">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" onclick="switchView('reservations-view', this)" style="text-decoration: none; color: inherit; display: block;">Reservations</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/profile" style="text-decoration: none; color: inherit; display: block; width: 100%;">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/settings" style="text-decoration: none; color: inherit; display: block; width: 100%;">Setting</a>
+                </li>
             </ul>
         </aside>
 
         <main class="dash-main-content">
-            
-            <div class="booking-hero">
+            <div id="home-view" class="content-view">
+                <div class="booking-hero">
                 <h1 style="margin-top: 0; font-size: 32px;">Book Now</h1>
                 <p style="font-size: 18px; margin-bottom: 20px;">Search available spaces across campus for your next study session...</p>
                 
@@ -64,7 +72,6 @@
             </div>
 
             <div class="card-grid" id="roomContainer">
-                
                 {% for room in rooms %}
                 <div class="room-card" data-category="{{ room.category }}">
                     <div class="card-image-placeholder">
@@ -78,10 +85,41 @@
                     </div>
                 </div>
                 {% endfor %}
+            </div>
+        </div>
 
+            <div id="reservations-view" class="content-view" style="display: none;">
+                <div class="reservations-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h1 style="margin: 0; color: #2c3549;">Upcoming Bookings</h1>
+                    <div class="filter-dropdown" style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 20px;">⧨</span>
+                    <select style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+                        <option value="upcoming">Upcoming</option>
+                        <option value="past">Past Bookings</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card-grid">
+                {% for booking in bookings %}
+                <div class="room-card" style="background: white; border: 1px solid #e0e5ed; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    
+                    <div style="background-color: #f0f2f5; height: 150px; border-radius: 4px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
+                        🖼️
+                    </div>
+                    <h3 style="margin-top: 0;">{{ booking.room_name }}</h3>
+                    <p style="color: #5b688c; margin: 5px 0;"><strong>Date:</strong> {{ booking.date }}</p>
+                    <p style="color: #5b688c; margin: 5px 0;"><strong>Time:</strong> {{ booking.time }}</p>
+                    <p style="color: #2e7d32; margin: 5px 0; font-weight: bold;">Status: {{ booking.status }}</p>
+                    <button class="solid-btn" style="margin-top: 15px; width: 100%;">View / Modify</button>
+                </div>
+                {% endfor %}
             </div>
         </main>
     </div>
+    
+    
 
     <footer class="footer">
         <div class="footer-logo">UOW</div>
@@ -112,6 +150,27 @@
                     card.style.display = "none"; // Hide card
                 }
             });
+        }
+    </script>
+
+    <script>
+        function switchView(viewId, element) {
+            const allViews = document.querySelectorAll('.content-view');
+            allViews.forEach(view => {
+                view.style.display = 'none';
+            });
+            document.getElementById(viewId).style.display = 'block';
+            const allNavItems = document.querySelectorAll('.nav-item');
+            allNavItems.forEach(item => {
+                item.classList.remove('active');
+                item.style.backgroundColor = ''; // Reset background
+                item.style.fontWeight = 'normal'; // Reset font weight
+            });
+            
+            const clickedListItem = element.parentElement;
+            clickedListItem.classList.add('active');
+            clickedListItem.style.backgroundColor = '#e2e8f0';
+            clickedListItem.style.fontWeight = 'bold';
         }
     </script>
 </body>

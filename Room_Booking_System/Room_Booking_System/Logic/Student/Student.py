@@ -10,11 +10,17 @@ class Student(object):
     def get_available_rooms(self):
         # We moved your dummy database right here!
         return [
-            {"id": 1, "name": "Lecture Hall B.1.1", "category": "Lecture Halls", "time": "09:00AM - 10:00AM", "desc": "Large seating, capacity 200"},
-            {"id": 2, "name": "Computer Lab A.2.3", "category": "Computer Labs", "time": "10:00AM - 11:00AM", "desc": "Equipped with 30 PCs"},
-            {"id": 3, "name": "Study Room A.3.5", "category": "Study Rooms", "time": "11:00AM - 12:00PM", "desc": "Small room, capacity 5"},
-            {"id": 4, "name": "Lecture Hall B.1.2", "category": "Lecture Halls", "time": "01:00PM - 02:00PM", "desc": "Medium seating, capacity 100"},
-            {"id": 5, "name": "Computer Lab A.2.4", "category": "Computer Labs", "time": "02:00PM - 03:00PM", "desc": "Equipped with 20 PCs"},
-            {"id": 6, "name": "Meeting Room A.3.6", "category": "Multipurpose Halls", "time": "03:00PM - 04:00PM", "desc": "Medium room, capacity 10"}
+            {"id": 1, "name": "Lecture Hall B.1.1", "category": "Lecture Halls", "desc": "Capacity: 200 Pax"},
+            {"id": 2, "name": "Computer Lab A.2.3", "category": "Computer Labs", "desc": "Capacity: 30 Pax"},
+            {"id": 3, "name": "Study Room A.3.5", "category": "Study Rooms", "desc": "Capacity: 6 Pax"},
+            {"id": 4, "name": "Lecture Hall B.1.2", "category": "Lecture Halls", "desc": "Capacity: 150 Pax"},
+            {"id": 5, "name": "Computer Lab A.2.4", "category": "Computer Labs", "desc": "Capacity: 25 Pax"},
+            {"id": 6, "name": "Meeting Room A.3.6", "category": "Multipurpose Halls", "desc": "Capacity: 20 Pax"}
+        ]
+        
+    def get_current_bookings(self, username):
+        return [
+            {"id": "b1", "room_name": "Study Room A.3.4", "date": "15 Nov 2023", "time": "14:00 - 16:00", "status": "Confirmed"},
+            {"id": "b2", "room_name": "Computer Lab A.2.4", "date": "18 Nov 2023", "time": "10:00 - 12:00", "status": "Confirmed"}
         ]
 

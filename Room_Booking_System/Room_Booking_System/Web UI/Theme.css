@@ -104,7 +104,7 @@
     box-sizing: border-box;
 }
 
-/* Sign Up / Login Buttons */
+/* Forget Link / Login Buttons */
 .action-buttons {
     display: flex;
     flex-direction: column;
@@ -266,6 +266,17 @@
     font-weight: bold;
     color: #2c3549;
 }
+/* Sidebar Link Styling */
+.nav-item {
+    padding: 12px 20px;
+    transition: background-color 0.2s;
+}
+
+.nav-item.active {
+    background-color: #e2e8f0;
+    font-weight: bold;
+    border-radius: 4px;
+}
 
 /* Main Content Area */
 .dash-main-content {
@@ -377,7 +388,7 @@
 /* --- BOOKING HERO & FILTERS --- */
 .booking-hero {
     background-color: #2c3549;
-    color: white;
+    color: #ffffff;
     padding: 40px;
     border-radius: 8px;
     margin-bottom: 30px;
@@ -389,6 +400,8 @@
     padding: 4px;
     border-radius: 4px;
     gap: 4px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .booking-filter-bar input, 
@@ -399,6 +412,8 @@
     border-radius: 2px;
     font-size: 16px;
     flex: 1;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .booking-filter-bar button {

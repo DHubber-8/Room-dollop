@@ -38,7 +38,7 @@ def reset_password():
         flash(f"If the username '{username}' exists, a password reset link has been sent to the registered email.")
         return redirect(url_for('home'))
         
-    # If the user just clicked the "Forget Password" link, show them the page
+    
     return render_template('ResetPassword.html')
 
 @app.route('/student_dashboard')
@@ -48,19 +48,8 @@ def student_dashboard():
         return redirect(url_for('home'))
     
     rooms_database = student_system.get_available_rooms()
-    return render_template('StudentDashboard.html', username=session['username'], rooms=rooms_database)
-
-@app.route('/reservations')
-def reservations():
-    if 'role' not in session or session['role'] != 'student':
-        return redirect(url_for('home'))
-    
-    my_bookings = [
-        {"id": "b1", "room_name": "Study Room A", "date": "15 May 2026", "time": "14:00 - 16:00", "status": "Confirmed"},
-        {"id": "b2", "room_name": "Computer Lab 2", "date": "18 May 2026", "time": "10:00 - 12:00", "status": "Confirmed"}
-    ]
-    
-    return render_template('Reservation.html', bookings=my_bookings)
+    bookings_database = student_system.get_current_bookings(session['username'])
+    return render_template('StudentDashboard.html', username=session['username'], rooms=rooms_database, bookings=bookings_database)
 
 @app.route('/staff_dashboard')
 def staff_dashboard():
@@ -69,7 +58,6 @@ def staff_dashboard():
         return redirect(url_for('home'))
     
     rooms_database = staff_system.get_all_rooms()
-    
     return render_template('StaffDashboard.html', username=session['username'], rooms=rooms_database)
 
 # --- LOGOUT ROUTE ---
