@@ -73,15 +73,15 @@
 
             <div class="card-grid" id="roomContainer">
                 {% for room in rooms %}
-                <div class="room-card" data-category="{{ room.category }}">
-                    <div class="card-image-placeholder">
+                <div class="room-card searchable-room" data-capacity="{{ room.capacity }}" data-block="{{ room.block }}" style="background: white; border: 1px solid #e0e5ed; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <div style="background-color: #f0f2f5; height: 150px; border-radius: 4px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
                         🖼️
                     </div>
                     <div class="card-details">
                         <h3 class="card-room-title">{{ room.name }}</h3>
-                        <p class="card-room-time">{{ room.time }}</p>
-                        <p class="card-room-desc">{{ room.desc }}</p>
-                        <button class="solid-btn">Book</button>
+                        <p class="card-room-desc" style="color: #5b688c; margin: 5px 0;">Capacity: {{ room.capacity }} Pax</p>
+                        <p class="card-room-desc" style="color: #5b688c; margin: 5px 0;">Location: Block {{ room.block }}</p>
+                        <button class="solid-btn" style="margin-top: 15px; width: 100%;">Book</button>
                     </div>
                 </div>
                 {% endfor %}
@@ -93,7 +93,7 @@
                     <h1 style="margin: 0; color: #2c3549;">Upcoming Bookings</h1>
                     <div class="filter-dropdown" style="display: flex; align-items: center; gap: 10px;">
                     <span style="font-size: 20px;">⧨</span>
-                    <select style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
+                    <select onchange="filterBookings(this.value)" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 150px;">
                         <option value="upcoming">Upcoming</option>
                         <option value="past">Past Bookings</option>
                         <option value="cancelled">Cancelled</option>
@@ -103,8 +103,7 @@
 
             <div class="card-grid">
                 {% for booking in bookings %}
-                <div class="room-card" style="background: white; border: 1px solid #e0e5ed; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                    
+                <div class="room-card booking-item" data-category="{{ booking.category }}" style="background: white; border: 1px solid #e0e5ed; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     <div style="background-color: #f0f2f5; height: 150px; border-radius: 4px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
                         🖼️
                     </div>
@@ -138,9 +137,7 @@
     <script>
         function filterRooms() {
             const selectedCategory = document.getElementById('roomFilter').value;
-            
             const cards = document.querySelectorAll('.room-card');
-            
             cards.forEach(card => {
                 
                 const cardCategory = card.getAttribute('data-category');
@@ -163,14 +160,66 @@
             const allNavItems = document.querySelectorAll('.nav-item');
             allNavItems.forEach(item => {
                 item.classList.remove('active');
-                item.style.backgroundColor = ''; // Reset background
-                item.style.fontWeight = 'normal'; // Reset font weight
+                item.style.backgroundColor = '';
+                item.style.fontWeight = 'normal';
             });
             
             const clickedListItem = element.parentElement;
             clickedListItem.classList.add('active');
             clickedListItem.style.backgroundColor = '#e2e8f0';
             clickedListItem.style.fontWeight = 'bold';
+        }
+        function filterBookings(selectedCategory) {
+            const allBookings = document.querySelectorAll('.booking-item');
+            allBookings.forEach(card => {
+                if (card.getAttribute('data-category') === selectedCategory) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            const titleElement = document.querySelector('.reservations-header h1');
+            if (selectedCategory === 'upcoming') titleElement.innerText = 'Upcoming Bookings';
+            if (selectedCategory === 'past') titleElement.innerText = 'Past Bookings';
+            if (selectedCategory === 'cancelled') titleElement.innerText = 'Cancelled Bookings';
+        }
+        window.onload = function() {
+            filterBookings('upcoming');
+        };
+
+        function applyFilters() {
+            
+            const dateValue = document.getElementById('filter-date').value;
+            const capacityValue = document.getElementById('filter-capacity').value;
+            const blockValue = document.getElementById('filter-block').value;
+            
+            const allRooms = document.querySelectorAll('.searchable-room');
+            
+            allRooms.forEach(card => {
+                let showCard = true;
+                const roomCapacity = parseInt(card.getAttribute('data-capacity'));
+                const roomBlock = card.getAttribute('data-block');
+                
+                if (capacityValue && roomCapacity < parseInt(capacityValue)) {
+                    showCard = false;
+                }
+                
+                if (blockValue && roomBlock !== blockValue) {
+                    showCard = false;
+                }
+                
+                if (dateValue && showCard) {
+                    if (Math.random() < 0.3) {
+                        showCard = false;
+                    }
+                }
+                
+                if (showCard) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
