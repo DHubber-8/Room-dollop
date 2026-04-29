@@ -29,9 +29,20 @@ def home():
             
     return render_template('Home.html')
 
+# --- RESET PASSWORD ROUTE ---
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        
+        flash(f"If the username '{username}' exists, a password reset link has been sent to the registered email.")
+        return redirect(url_for('home'))
+        
+    # If the user just clicked the "Forget Password" link, show them the page
+    return render_template('ResetPassword.html')
+
 @app.route('/student_dashboard')
 def student_dashboard():
-    # Security check: Ensure the user is actually logged in as a student
     if 'role' not in session or session['role'] != 'student':
         flash("Access Denied: You must be logged in as a Student to view this page.")
         return redirect(url_for('home'))
@@ -43,7 +54,6 @@ def student_dashboard():
 
 @app.route('/staff_dashboard')
 def staff_dashboard():
-    # Security check: Ensure the user is actually logged in as a staff
     if 'role' not in session or session['role'] != 'staff':
         flash("Access Denied: You must be logged in as a Staff to view this page.")
         return redirect(url_for('home'))
