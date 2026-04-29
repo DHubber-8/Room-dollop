@@ -20,23 +20,47 @@
     <div class="dash-layout">
         <aside class="dash-sidebar">
             <ul class="nav-list">
-                <li class="active">Main</li>
-                <li>Reservations</li>
-                <li>Profile</li>
-                <li>Setting</li>
+                <li class="active"><a href="/student_dashboard" style="text-decoration: none; color: inherit; display: block; width: 100%;">Main</a></li>
+                <li><a href="/reservations" style="text-decoration: none; color: inherit; display: block; width: 100%;">Reservations</a></li>
+                <li><a href="/profile" style="text-decoration: none; color: inherit; display: block; width: 100%;">Profile</a></li>
+                <li><a href="/settings" style="text-decoration: none; color: inherit; display: block; width: 100%;">Setting</a></li>
             </ul>
         </aside>
 
         <main class="dash-main-content">
             
-            <div class="filter-section">
-                <label for="roomFilter" style="font-weight:bold; margin-right: 10px;">Filter: </label>
-                <select id="roomFilter" onchange="filterRooms()">
-                    <option value="All">Filter</option>
-                    <option value="Capacity">Capacity</option>
-                    <option value="Pax">Pax</option>
-                    <option value="Date">Date</option>
-                </select>
+            <div class="booking-hero">
+                <h1 style="margin-top: 0; font-size: 32px;">Book Now</h1>
+                <p style="font-size: 18px; margin-bottom: 20px;">Search available spaces across campus for your next study session...</p>
+                
+                <div class="booking-filter-bar">
+                    <input type="date" id="filter-date" aria-label="Select Date">
+                    
+                    <input type="number" id="filter-capacity" placeholder="Capacity (e.g., 4)" min="1">
+                    
+                    <select id="filter-block">
+                        <option value="">Any Campus Block</option>
+                        <option value="A">Block A</option>
+                        <option value="B">Block B</option>
+                        <option value="C">Block C</option>
+                    </select>
+                    
+                    <button type="button" onclick="applyFilters()">Search</button>
+                </div>
+
+                <div class="promo-offer-card">
+                    <div>
+                        <span style="font-size: 12px; color: #5b688c;">Special Deal for Students</span>
+                        <h3 style="margin: 5px 0; color: #2c3549;">Finals Week Quiet Zones</h3>
+                        <p style="margin: 0; font-size: 14px; color: #5b688c;">Book Block C study rooms in advance and get priority access.</p>
+                        <button class="solid-btn" style="margin-top: 10px; padding: 8px 15px;">Claim Offer</button>
+                    </div>
+                    <div style="font-size: 40px;">🤫</div>
+                </div>
+            </div>
+            
+            <div class="section-header">
+                <h3>Available Rooms</h3>
             </div>
 
             <div class="card-grid" id="roomContainer">
@@ -62,30 +86,26 @@
     <footer class="footer">
         <div class="footer-logo">UOW</div>
         <div class="footer-bottom">
-            <div>Copyright 2026 Company Name.</div>
+            <div>Copyright 2026 University Of Wollongong.</div>
             <div class="footer-links">
+                <a href="#">Feedback Form</a>
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms & Conditions</a>
                 <a href="#">Cookie Policy</a>
-                <a href="#">Contact</a>
+                <a href="#">Contact Us</a>
             </div>
         </div>
     </footer>
 
     <script>
         function filterRooms() {
-            // 1. Get the category the user just selected
             const selectedCategory = document.getElementById('roomFilter').value;
             
-            // 2. Get all the room cards on the page
             const cards = document.querySelectorAll('.room-card');
-
-            // 3. Loop through each card
+            
             cards.forEach(card => {
-                // Read the hidden category we attached to the card
+                
                 const cardCategory = card.getAttribute('data-category');
-
-                // If "All" is selected OR the card matches the choice, show it. Otherwise, hide it.
                 if (selectedCategory === "All" || selectedCategory === cardCategory) {
                     card.style.display = "flex"; // Show card
                 } else {

@@ -48,9 +48,19 @@ def student_dashboard():
         return redirect(url_for('home'))
     
     rooms_database = student_system.get_available_rooms()
-
     return render_template('StudentDashboard.html', username=session['username'], rooms=rooms_database)
 
+@app.route('/reservations')
+def reservations():
+    if 'role' not in session or session['role'] != 'student':
+        return redirect(url_for('home'))
+    
+    my_bookings = [
+        {"id": "b1", "room_name": "Study Room A", "date": "15 May 2026", "time": "14:00 - 16:00", "status": "Confirmed"},
+        {"id": "b2", "room_name": "Computer Lab 2", "date": "18 May 2026", "time": "10:00 - 12:00", "status": "Confirmed"}
+    ]
+    
+    return render_template('Reservation.html', bookings=my_bookings)
 
 @app.route('/staff_dashboard')
 def staff_dashboard():
