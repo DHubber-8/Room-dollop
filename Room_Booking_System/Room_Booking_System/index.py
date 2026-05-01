@@ -48,9 +48,8 @@ def student_dashboard():
         return redirect(url_for('home'))
     
     rooms_database = student_system.get_available_rooms()
-
-    return render_template('StudentDashboard.html', username=session['username'], rooms=rooms_database)
-
+    bookings_database = student_system.get_current_bookings(session['username'])
+    return render_template('StudentDashboard.html', username=session['username'], rooms=rooms_database, bookings=bookings_database)
 
 @app.route('/staff_dashboard')
 def staff_dashboard():
@@ -59,7 +58,6 @@ def staff_dashboard():
         return redirect(url_for('home'))
     
     rooms_database = staff_system.get_all_rooms()
-    
     return render_template('StaffDashboard.html', username=session['username'], rooms=rooms_database)
 
 # --- LOGOUT ROUTE ---

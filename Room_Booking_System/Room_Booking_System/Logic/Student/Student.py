@@ -8,13 +8,31 @@ class Student(object):
         return False
 
     def get_available_rooms(self):
-        # We moved your dummy database right here!
         return [
-            {"id": 1, "name": "Lecture Hall B.1.1", "category": "Lecture Halls", "time": "09:00AM - 10:00AM", "desc": "Large seating, capacity 200"},
-            {"id": 2, "name": "Computer Lab A.2.3", "category": "Computer Labs", "time": "10:00AM - 11:00AM", "desc": "Equipped with 30 PCs"},
-            {"id": 3, "name": "Study Room A.3.5", "category": "Study Rooms", "time": "11:00AM - 12:00PM", "desc": "Small room, capacity 5"},
-            {"id": 4, "name": "Lecture Hall B.1.2", "category": "Lecture Halls", "time": "01:00PM - 02:00PM", "desc": "Medium seating, capacity 100"},
-            {"id": 5, "name": "Computer Lab A.2.4", "category": "Computer Labs", "time": "02:00PM - 03:00PM", "desc": "Equipped with 20 PCs"},
-            {"id": 6, "name": "Meeting Room A.3.6", "category": "Multipurpose Halls", "time": "03:00PM - 04:00PM", "desc": "Medium room, capacity 10"}
+            {"id": 1, "name": "Lecture Hall B.1.1", "capacity": 200 , "block": "B"},
+            {"id": 2, "name": "Computer Lab A.2.3", "capacity": 30 , "block": "A"},
+            {"id": 3, "name": "Study Room C.3.5", "capacity": 6 , "block": "C"},
+            {"id": 4, "name": "Lecture Hall B.1.2", "capacity": 150 , "block": "B"},
+            {"id": 5, "name": "Computer Lab A.2.4", "capacity": 25 , "block": "A"},
+            {"id": 6, "name": "Multipurpose Hall A.3.6", "capacity": 250 , "block": "A"},
+            {"id": 7, "name": "Study Room C.3.4", "capacity": 4 , "block": "C"},
+            {"id": 8, "name": "Lecture Hall B.1.3", "capacity": 100 , "block": "B"},
+            {"id": 9, "name": "Computer Lab A.2.5", "capacity": 20 , "block": "A"},
+            {"id": 10, "name": "Multipurpose Hall B.1.7", "capacity": 300, "block": "B"},
+            {"id": 11, "name": "Study Room C.3.6", "capacity": 5, "block": "C"}
+        ]
+        
+    def get_current_bookings(self, username):
+        return [
+            # Upcoming Bookings
+            {"id": "b1", "room_name": "Study Room C.3.4", "date": "15 May 2026", "time": "14:30 - 15:30", "status": "Confirmed", "category": "upcoming"},
+            {"id": "b2", "room_name": "Computer Lab A.2.4", "date": "18 June 2026", "time": "10:30 - 12:30", "status": "Confirmed", "category": "upcoming"},
+            {"id": "b3", "room_name": "Lecture Hall B.1.2", "date": "20 June 2026", "time": "09:30 - 11:30", "status": "Confirmed", "category": "upcoming"},
+            
+            # Past Bookings
+            {"id": "b4", "room_name": "Lecture Hall B.1.1", "date": "10 Jan 2026", "time": "08:30 - 10:30", "status": "Completed", "category": "past"},
+            
+            # Cancelled Booking
+            {"id": "b5", "room_name": "Study Room C.3.5", "date": "25 May 2026", "time": "13:30 - 15:30", "status": "Cancelled", "category": "cancelled"}
         ]
 
