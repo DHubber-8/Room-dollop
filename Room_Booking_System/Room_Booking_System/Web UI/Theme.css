@@ -438,3 +438,27 @@
     align-items: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
+.time-slot-btn {
+    padding: 10px;
+    border: 1px solid #2c3549;
+    background-color: #2c3549;
+    color: #ffffff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.time-slot-btn.selected {
+    background-color: #ffffff;
+    color: #2c3549;
+}
+
+.time-slot-btn:disabled {
+    background-color: #f0f2f5;
+    color: #a0aec0;
+    border: 1px solid #e2e8f0;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}

@@ -81,7 +81,10 @@
                         <h3 class="card-room-title">{{ room.name }}</h3>
                         <p class="card-room-desc" style="color: #5b688c; margin: 5px 0;">Capacity: {{ room.capacity }} Pax</p>
                         <p class="card-room-desc" style="color: #5b688c; margin: 5px 0;">Location: Block {{ room.block }}</p>
-                        <button class="solid-btn" style="margin-top: 15px; width: 100%;">Book</button>
+                        <button class="solid-btn" style="margin-top: 15px;" 
+                                onclick="openBookingSelection('{{ room.id }}', '{{ room.name }}', '{{ room.capacity }}', '{{ room.block }}')">
+                            Book
+                        </button>
                     </div>
                 </div>
                 {% endfor %}
@@ -114,6 +117,53 @@
                     <button class="solid-btn" style="margin-top: 15px; width: 100%;">View / Modify</button>
                 </div>
                 {% endfor %}
+            </div>
+        </div>
+            
+            <div id="booking-selection-view" class="content-view" style="display: none;">
+                <div class="section-header" style="border-bottom: 2px solid #e0e5ed; padding-bottom: 10px; margin-bottom: 20px;">
+                    <h2 id="selection-room-header" style="margin: 0; color: #2c3549;">Study Room</h2>
+                </div>
+
+                <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 300px;">
+                        <div style="background-color: #f0f2f5; height: 250px; border-radius: 4px; display: flex; justify-content: center; align-items: center; border: 1px solid #e0e5ed; margin-bottom: 20px;">
+                            🖼️ Image Placeholder
+                        </div>
+                        <h3 style="margin-top: 0;">Description</h3>
+                        <p style="color: #5b688c;">Room Name: <strong style="color: #2c3549;" id="selection-room-name">...</strong></p>
+                        <p style="color: #5b688c;">Location: UOW Campus - Block <strong style="color: #2c3549;" id="selection-room-block">...</strong></p>
+                        <p style="color: #5b688c;">Date: <strong style="color: #2c3549;" id="selection-room-date">...</strong></p>
+                        <p style="color: #5b688c;">Capacity: <strong style="color: #2c3549;" id="selection-room-capacity">...</strong> Pax</p>
+                        
+                        <p style="color: #d32f2f; font-size: 14px; margin-top: 30px; font-weight: bold;">
+                            *Allowed up to 2 hours booking per student ID
+                        </p>
+                    </div>
+
+                    <div style="flex: 1.5; min-width: 300px;">
+                        <div id="time-slots-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px;">
+                    
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">08:00 - 09:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">09:00 - 10:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">10:00 - 11:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">11:00 - 12:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">12:00 - 13:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">13:00 - 14:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">14:00 - 15:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">15:00 - 16:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">16:00 - 17:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">17:00 - 18:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">18:00 - 19:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">19:00 - 20:00</button>
+                        </div>
+                        
+                        <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 15px;">
+                            <button class="solid-btn" style="background-color: #d32f2f; padding: 10px 20px;" onclick="cancelSelection()">Cancel Booking</button>
+                            <button class="solid-btn" style="padding: 10px 40px;" onclick="submitBooking()">Book</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -220,6 +270,74 @@
                     card.style.display = 'none';
                 }
             });
+        }
+        
+    </script>
+
+    <script>
+        let selectedSlotsCount = 0;
+        const MAX_SLOTS = 2;
+        
+        function openBookingSelection(roomId, roomName, roomCapacity, roomBlock) {
+            
+            const allViews = document.querySelectorAll('.content-view');
+            allViews.forEach(view => view.style.display = 'none');
+            document.getElementById('booking-selection-view').style.display = 'block';
+            
+            document.getElementById('selection-room-header').innerText = roomName;
+            document.getElementById('selection-room-name').innerText = roomName;
+            document.getElementById('selection-room-capacity').innerText = roomCapacity;
+            document.getElementById('selection-room-block').innerText = roomBlock;
+
+            let dateInput = document.getElementById('filter-date').value;
+            if (!dateInput) {
+                const today = new Date();
+                dateInput = today.toISOString().split('T')[0];
+                document.getElementById('filter-date') = dateInput;
+            }
+            document.getElementById('selection-room-date').innerText = dateInput;
+            
+            const allSlots = document.querySelectorAll('.time-slot-btn');
+            allSlots.forEach(slot => {
+                slot.classList.remove('selected');
+                slot.disabled = false;
+
+                if (Math.random() < 0.35) {
+                    slot.disabled = true;
+                }
+            });
+            selectedSlotsCount = 0; 
+        }
+        
+        function toggleTimeSlot(buttonElement) {
+            
+            if (buttonElement.classList.contains('selected')) {
+                buttonElement.classList.remove('selected');
+                selectedSlotsCount--;
+            } 
+            
+            else {
+                if (selectedSlotsCount < MAX_SLOTS) {
+                    buttonElement.classList.add('selected');
+                    selectedSlotsCount++;
+                } else {
+                    alert("You can only book a maximum of 2 hours per Student ID.");
+                }
+            }
+        }
+        
+        function cancelSelection() {
+            
+            document.getElementById('booking-selection-view').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+        }
+        
+        function submitBooking() {
+            if (selectedSlotsCount === 0) {
+                alert("Please select at least one time slot!");
+                return;
+            }
+            alert("Success! Time slots confirmed. (Backend connection coming next!)");
         }
     </script>
 </body>
