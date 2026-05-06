@@ -74,8 +74,8 @@
             <div class="card-grid" id="roomContainer">
                 {% for room in rooms %}
                 <div class="room-card searchable-room" data-capacity="{{ room.capacity }}" data-block="{{ room.block }}" style="background: white; border: 1px solid #e0e5ed; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                    <div style="background-color: #f0f2f5; height: 150px; border-radius: 4px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
-                        🖼️
+                    <div style="background-color: #f0f2f5; height: 150px; border-radius: 4px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px; overflow: hidden;">
+                        <img src="{{ url_for('static', filename='PicturesRoom/' ~ room.name ~ '.jpg') }}" alt="{{ room.name }}" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <div class="card-details">
                         <h3 class="card-room-title">{{ room.name }}</h3>
@@ -107,8 +107,8 @@
             <div class="card-grid">
                 {% for booking in bookings %}
                 <div class="room-card booking-item" data-category="{{ booking.category }}" style="background: white; border: 1px solid #e0e5ed; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                    <div style="background-color: #f0f2f5; height: 150px; border-radius: 4px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
-                        🖼️
+                    <div style="background-color: #f0f2f5; height: 150px; border-radius: 4px; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 15px;">
+                        <img src="{{ url_for('static', filename='PicturesRoom/' ~ booking.room_name ~ '.jpg') }}" alt="{{ booking.room_name }}" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <h3 style="margin-top: 0;">{{ booking.room_name }}</h3>
                     <p style="color: #5b688c; margin: 5px 0;"><strong>Date:</strong> {{ booking.date }}</p>
@@ -127,8 +127,8 @@
 
                 <div style="display: flex; gap: 40px; flex-wrap: wrap;">
                     <div style="flex: 1; min-width: 300px;">
-                        <div style="background-color: #f0f2f5; height: 250px; border-radius: 4px; display: flex; justify-content: center; align-items: center; border: 1px solid #e0e5ed; margin-bottom: 20px;">
-                            🖼️ Image Placeholder
+                        <div style="background-color: #f0f2f5; height: 250px; border-radius: 4px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                            <img id="selection-room-image" src="" alt="Selected Room" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
                         </div>
                         <h3 style="margin-top: 0;">Description</h3>
                         <p style="color: #5b688c;">Room Name: <strong style="color: #2c3549;" id="selection-room-name">...</strong></p>
@@ -288,6 +288,7 @@
             document.getElementById('selection-room-name').innerText = roomName;
             document.getElementById('selection-room-capacity').innerText = roomCapacity;
             document.getElementById('selection-room-block').innerText = roomBlock;
+            document.getElementById('selection-room-image').src = `/static/PicturesRoom/${roomName}.jpg`;
 
             let dateInput = document.getElementById('filter-date').value;
             if (!dateInput) {

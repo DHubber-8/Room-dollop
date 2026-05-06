@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from Logic.Student.Student import Student
 from Logic.Staff.Staff import Staff
 
-app = Flask(__name__, template_folder='Web UI', static_folder='Web UI')
+app = Flask(__name__, template_folder='Web UI', static_folder='static')
 app.secret_key = "super_secret_school_key"
 
 student_system = Student()
