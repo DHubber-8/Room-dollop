@@ -9,7 +9,7 @@
 <body class="dashboard-body">
 
     <header class="dash-top-bar">
-        <div class="dash-logo">Logo</div>
+        <div class="dash-logo">UOW</div>
         <h2 class="dash-title">Student Booking</h2>
         <div class="dash-nav-items">
             <button class="outline-btn">Cart</button>
@@ -120,7 +120,16 @@
                     <p style="color: #5b688c; margin: 5px 0;"><strong>Date:</strong> {{ booking.date }}</p>
                     <p style="color: #5b688c; margin: 5px 0;"><strong>Time:</strong> {{ booking.time }}</p>
                     <p style="color: #2e7d32; margin: 5px 0; font-weight: bold;">Status: {{ booking.status }}</p>
-                    <button class="solid-btn" style="margin-top: 15px; width: 100%;">View / Modify</button>
+                {% if booking.status == "Confirmed" %}
+                    <button class="solid-btn" style="margin-top: 15px; width: 100%;" 
+                            onclick="openModifyBooking('{{ booking.room_name }}', '{{ booking.date }}', '{{ booking.capacity }}', '{{ booking.block }}')">
+                        View / Modify
+                    </button>
+                {% else %}
+                    <button class="solid-btn" style="margin-top: 15px; width: 100%; background-color: #f0f2f5; color: #a0aec0; border: 1px solid #e0e5ed; cursor: not-allowed;" disabled>
+                        {{ booking.status }} - Locked
+                    </button>
+                {% endif %}
                 </div>
                 {% endfor %}
             </div>
@@ -150,18 +159,18 @@
                     <div style="flex: 1.5; min-width: 300px;">
                         <div id="time-slots-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px;">
                     
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">08:00 - 09:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">09:00 - 10:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">10:00 - 11:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">11:00 - 12:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">12:00 - 13:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">13:00 - 14:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">14:00 - 15:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">15:00 - 16:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">16:00 - 17:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">17:00 - 18:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">18:00 - 19:00</button>
-                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">19:00 - 20:00</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">08:30 - 09:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">09:30 - 10:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">10:30 - 11:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">11:30 - 12:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">12:30 - 13:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">13:30 - 14:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">14:30 - 15:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">15:30 - 16:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">16:30 - 17:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">17:30 - 18:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">18:30 - 19:30</button>
+                            <button class="time-slot-btn" onclick="toggleTimeSlot(this)">19:30 - 20:30</button>
                         </div>
                         
                         <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 15px;">
@@ -300,7 +309,7 @@
             if (!dateInput) {
                 const today = new Date();
                 dateInput = today.toISOString().split('T')[0];
-                document.getElementById('filter-date') = dateInput;
+                document.getElementById('filter-date').value = dateInput;
             }
             document.getElementById('selection-room-date').innerText = dateInput;
             
@@ -316,6 +325,34 @@
             selectedSlotsCount = 0; 
         }
         
+        function openModifyBooking(roomName, bookingDate, roomCapacity, roomBlock) {
+            
+            const allViews = document.querySelectorAll('.content-view');
+            allViews.forEach(view => view.style.display = 'none');
+            document.getElementById('booking-selection-view').style.display = 'block';
+            document.getElementById('selection-room-header').innerText = "Modify Booking: " + roomName; 
+            document.getElementById('selection-room-name').innerText = roomName;
+            document.getElementById('selection-room-date').innerText = bookingDate;
+            
+            document.getElementById('selection-room-capacity').innerText = roomCapacity;
+            document.getElementById('selection-room-block').innerText = roomBlock;
+
+            document.getElementById('selection-room-image').src = `/static/PicturesRoom/${roomName}.jpg`;
+
+            const allSlots = document.querySelectorAll('.time-slot-btn');
+            selectedSlotsCount = 0; 
+            
+            allSlots.forEach(slot => {
+                slot.classList.remove('selected');
+                slot.disabled = false; 
+
+                
+                if (Math.random() < 0.35) {
+                    slot.disabled = true;
+                }
+            });
+        }
+
         function toggleTimeSlot(buttonElement) {
             
             if (buttonElement.classList.contains('selected')) {
