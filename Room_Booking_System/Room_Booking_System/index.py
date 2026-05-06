@@ -38,7 +38,7 @@ def reset_password():
         flash(f"If the username '{username}' exists, a password reset link has been sent to the registered email.")
         return redirect(url_for('home'))
         
-    
+    # If the user just clicked the "Forget Password" link, show them the page
     return render_template('ResetPassword.html')
 
 @app.route('/student_dashboard')
