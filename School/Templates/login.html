@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Portal Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        /* Header styling */
+        .header {
+            padding: 20px 40px;
+        }
+        .header h1 {
+            color: #2b4cc7;
+            margin: 0;
+            font-size: 48px;
+        }
+        .header p {
+            color: #5d6d88;
+            margin: 5px 0 0 0;
+            font-size: 20px;
+        }
+
+        /* Center content area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Login Box styling */
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            border: 2px dashed #ccc; /* Dashed border from image */
+            width: 350px;
+        }
+
+        /* Role Selection Buttons */
+        .role-selector {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            margin: 0 5px;
+            background-color: #313a4e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            opacity: 0.5; /* Dimmed by default */
+        }
+        .role-btn.active {
+            opacity: 1; /* Fully visible when selected */
+            background-color: #1e2532;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #d2d6df; /* Light grey input from image */
+            border: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* Bottom Buttons (Sign Up / Login) */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            margin: 0 5px;
+            background-color: #313a4e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .action-btn:hover { background-color: #1e2532; }
+
+        /* Error Messages */
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        /* Dark Footer styling */
+        .footer {
+            background-color: #1c2331;
+            color: #8892a3;
+            padding: 40px;
+            font-size: 12px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .footer-top {
+            margin-bottom: 40px;
+        }
+        .footer-logo {
+            background-color: #313a4e;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #313a4e;
+            padding-top: 20px;
+        }
+        .footer-links span {
+            margin-left: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>UOW</h1>
+        <p>University of<br>Wollongong</p>
+    </div>
+
+    <div class="main-content">
+        <div class="login-container">
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="error-message">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <div class="role-selector">
+                <button type="button" id="btn-student" class="role-btn active" onclick="selectRole('student')">Student</button>
+                <button type="button" id="btn-staff" class="role-btn" onclick="selectRole('staff')">Staff</button>
+            </div>
+
+            <form method="POST" action="/">
+                <input type="hidden" id="role-input" name="role" value="student">
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div class="action-buttons">
+                    <button type="button" class="action-btn">Sign Up</button>
+                    <button type="submit" class="action-btn">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-top">
+            <button class="footer-logo">UOW</button>
+        </div>
+        <div class="footer-bottom">
+            <div>Copyright © 2026 University of Wollongong</div>
+            <div class="footer-links">
+                <span>Privacy Policy</span>
+                <span>Terms & Conditions</span>
+                <span>Cookie Policy</span>
+                <span>Contact</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectRole(role) {
+            // Update the hidden input field so Python knows what was selected
+            document.getElementById('role-input').value = role;
+            
+            // Remove the 'active' highlight from both buttons
+            document.getElementById('btn-student').classList.remove('active');
+            document.getElementById('btn-staff').classList.remove('active');
+            
+            // Add the 'active' highlight to the clicked button
+            document.getElementById('btn-' + role).classList.add('active');
+        }
+    </script>
+</body>
+</html>
