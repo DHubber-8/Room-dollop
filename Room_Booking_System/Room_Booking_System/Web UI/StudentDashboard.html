@@ -66,6 +66,16 @@
                     <div style="font-size: 40px;">🤫</div>
                 </div>
             </div>
+            
+            <div class="filter-section">
+                <label for="roomFilter" style="font-weight:bold; margin-right: 10px;">Filter: </label>
+                <select id="roomFilter" onchange="filterRooms()">
+                    <option value="All">Filter</option>
+                    <option value="Capacity">Capacity</option>
+                    <option value="Pax">Pax</option>
+                    <option value="Date">Date</option>
+                </select>
+            </div>
 
             <div class="card-grid" id="roomContainer">
                 {% for room in rooms %}
