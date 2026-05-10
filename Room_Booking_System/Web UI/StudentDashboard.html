@@ -49,7 +49,7 @@
                     <button type="button" onclick="applyFilters()">Search</button>
                 </div>
 
-                <div id="promo-offer-banner" style="background-color: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e0e5ed; width: 100%; box-sizing: border-box;">
+                <div id="promo-offer-banner" style="background-color: white; border-radius: 8px; margin-top: 20px; padding: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e0e5ed; width: 100%; box-sizing: border-box;">
                     <div>
                         <span style="font-size: 12px; color: #5b688c;">Special Deal for Students</span>
                         <h3 style="margin: 5px 0; color: #2c3549;">Finals Week Quiet Zones</h3>
@@ -186,6 +186,7 @@
     </footer>
 
     <script>
+        
         function filterRooms() {
             const selectedCategory = document.getElementById('roomFilter').value;
             const cards = document.querySelectorAll('.room-card');
@@ -199,9 +200,7 @@
                 }
             });
         }
-    </script>
-
-    <script>
+    
         function switchView(viewId, element) {
             const allViews = document.querySelectorAll('.content-view');
             allViews.forEach(view => {
@@ -273,9 +272,6 @@
             });
         }
         
-    </script>
-
-    <script>
         function getRoomPrice(roomName) {
             if (roomName.includes("Study Room")) {
                 return "$5.00";
@@ -292,9 +288,10 @@
 
         let selectedSlotsCount = 0;
         const MAX_SLOTS = 2;
+        let sourceView = 'home-view';
         
         function openBookingSelection(roomId, roomName, roomCapacity, roomBlock) {
-            
+            sourceView = 'home-view';
             const allViews = document.querySelectorAll('.content-view');
             allViews.forEach(view => view.style.display = 'none');
             document.getElementById('booking-selection-view').style.display = 'block';
@@ -327,7 +324,7 @@
         }
         
         function openModifyBooking(roomName, bookingDate, roomCapacity, roomBlock) {
-            
+            sourceView = 'reservations-view';
             const allViews = document.querySelectorAll('.content-view');
             allViews.forEach(view => view.style.display = 'none');
             document.getElementById('booking-selection-view').style.display = 'block';
@@ -375,8 +372,7 @@
             
             if (isConfirmed) {
                 document.getElementById('booking-selection-view').style.display = 'none';
-                document.getElementById('home-view').style.display = 'block';
-                // Optional: You can clear the selected slots here just to be safe
+                document.getElementById(sourceView).style.display = 'block';
                 const allSlots = document.querySelectorAll('.time-slot-btn');
                 allSlots.forEach(slot => slot.classList.remove('selected'));
                 selectedSlotsCount = 0;
