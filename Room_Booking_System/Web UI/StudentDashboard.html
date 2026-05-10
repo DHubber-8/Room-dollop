@@ -12,7 +12,6 @@
         <div class="dash-logo">UOW</div>
         <h2 class="dash-title">Student Booking</h2>
         <div class="dash-nav-items">
-            <button class="outline-btn">Cart</button>
             <a href="/logout" class="solid-btn" style="text-decoration: none;">Logout</a>
         </div>
     </header>
@@ -25,12 +24,6 @@
                 </li>
                 <li class="nav-item">
                     <a href="#" onclick="switchView('reservations-view', this)" style="text-decoration: none; color: inherit; display: block;">Reservations</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/profile" style="text-decoration: none; color: inherit; display: block; width: 100%;">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/settings" style="text-decoration: none; color: inherit; display: block; width: 100%;">Setting</a>
                 </li>
             </ul>
         </aside>
@@ -56,14 +49,16 @@
                     <button type="button" onclick="applyFilters()">Search</button>
                 </div>
 
-                <div class="promo-offer-card">
+                <div id="promo-offer-banner" style="background-color: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e0e5ed; width: 100%; box-sizing: border-box;">
                     <div>
                         <span style="font-size: 12px; color: #5b688c;">Special Deal for Students</span>
                         <h3 style="margin: 5px 0; color: #2c3549;">Finals Week Quiet Zones</h3>
                         <p style="margin: 0; font-size: 14px; color: #5b688c;">Book Block C study rooms in advance and get priority access.</p>
-                        <button class="solid-btn" style="margin-top: 10px; padding: 8px 15px;">Claim Offer</button>
                     </div>
-                    <div style="font-size: 40px;">🤫</div>
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="font-size: 40px;">🤫</div>
+                        <button id="claim-offer-btn" class="solid-btn" style="padding: 10px 20px; min-width: 120px;" onclick="claimOffer()">Claim Offer</button>
+                    </div>
                 </div>
             </div>
 
@@ -376,9 +371,16 @@
         }
         
         function cancelSelection() {
+            const isConfirmed = confirm("Are you sure you want to cancel? Any unsaved modifications will be lost.");
             
-            document.getElementById('booking-selection-view').style.display = 'none';
-            document.getElementById('home-view').style.display = 'block';
+            if (isConfirmed) {
+                document.getElementById('booking-selection-view').style.display = 'none';
+                document.getElementById('home-view').style.display = 'block';
+                // Optional: You can clear the selected slots here just to be safe
+                const allSlots = document.querySelectorAll('.time-slot-btn');
+                allSlots.forEach(slot => slot.classList.remove('selected'));
+                selectedSlotsCount = 0;
+            }
         }
         
         function submitBooking() {
@@ -387,6 +389,19 @@
                 return;
             }
             alert("Success! Time slots confirmed. (Backend connection coming next!)");
+        }
+        
+        function claimOffer() {
+            alert("🎉 Offer Claimed! Priority access to Block C Study Rooms has been activated for your account.");
+            const claimBtn = document.getElementById('claim-offer-btn');
+            if (claimBtn) {
+                claimBtn.innerText = "Claimed";
+                claimBtn.disabled = true;
+                claimBtn.style.backgroundColor = "#f0f2f5";
+                claimBtn.style.color = "#a0aec0";
+                claimBtn.style.border = "1px solid #e0e5ed";
+                claimBtn.style.cursor = "not-allowed";
+            }
         }
     </script>
 </body>
