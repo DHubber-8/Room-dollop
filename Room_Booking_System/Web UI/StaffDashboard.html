@@ -3,71 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Room Creation</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='Theme.css') }}">
+    <title>Staff Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Theme_Staff.css') }}">
 </head>
 <body class="dashboard-body">
 
     <header class="dash-top-bar">
         <div class="dash-logo">UOW</div>
-        <h2 class="dash-title">Staff Room Creation</h2>
+        <h2 class="dash-title">Staff Dashboard</h2>
         <div class="dash-nav-items">
-            <button class="outline-btn">Button</button>
+
             <a href="/logout" class="solid-btn" style="text-decoration: none;">Logout</a>
         </div>
     </header>
 
     <div class="dash-layout">
-        <aside class="dash-sidebar">
-            <ul class="nav-list">
-                <li class="active">Managed Room</li>
-                <li>Created</li>
-                <li>Profile</li>
-                <li>Setting</li>
-            </ul>
-        </aside>
+
 
         <main class="dash-main-content">
-            
-            <div class="section-header">
-                <h3>Draft</h3>
-                <button class="solid-btn">+ Create</button>
-            </div>
-            
-            <div class="draft-container">
-                <div class="draft-slot">Slot</div>
-                <div class="draft-slot">Slot</div>
-            </div>
+
+
 
             <div class="section-header" style="margin-top: 40px;">
-                <h3>Created</h3>
-                
+                <h3>Created Rooms</h3>
+
                 <div class="filter-wrapper">
-                    <label for="roomFilter" style="font-weight:bold; margin-right: 10px;">Filter: </label>
-                    <select id="roomFilter" onchange="filterRooms()">
-                        <option value="All">All Rooms</option>
-                        <option value="Lecture Halls">Lecture Halls</option>
-                        <option value="Computer Labs">Computer Labs</option>
-                        <option value="Study Rooms">Study Rooms</option>
-                        <option value="Multipurpose Hall">Multipurpose Halls</option>
-                    </select>
+
+                    <label for="roomSearch"
+                           style="font-weight:bold; margin-right:10px;">
+                        Search:
+                    </label>
+
+                    <input type="text"
+                           id="roomSearch"
+                           placeholder="Search room name..."
+                           onkeyup="searchRooms()"
+                           style="
+            width:250px;
+            height:42px;
+            padding:0 14px;
+            border:none;
+            border-radius:6px;
+            background:#ced4e0;
+            color:#2c3549;
+            font-weight:bold;
+        ">
+
                 </div>
             </div>
 
             <div class="card-grid" id="roomContainer" style="margin-top: 20px;">
                 {% for room in rooms %}
                 <div class="room-card" data-category="{{ room.category }}">
-                    <div class="card-image-placeholder">🖼️</div>
+                    <img src="{{ url_for('static', filename=room.image) }}"
+                         class="card-room-image">
                     <div class="card-details">
                         <h3 class="card-room-title">{{ room.name }}</h3>
                         <p class="card-room-desc">{{ room.desc }}</p>
-                        <button class="solid-btn">Edit</button>
+                        <a href="/Staff_EditRoom/{{ room.room_id }}" class="solid-btn" style="text-decoration:none;">Edit</a>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </main>
     </div>
+    <a href="/Staff_CreateRoom" class="floating-create-btn">+</a>
 
     <footer class="footer">
         <div class="footer-logo">UOW</div>
@@ -83,14 +83,16 @@
         </div>
     </footer>
 
-    <script>
-        function filterRooms() {
-            const selectedCategory = document.getElementById('roomFilter').value;
-            const cards = document.querySelectorAll('.room-card');
 
-            cards.forEach(card => {
-                const cardCategory = card.getAttribute('data-category');
-                if (selectedCategory === "All" || selectedCategory === cardCategory) {
+    <script>
+        function searchRooms() {
+            const keyword = document.getElementById("roomSearch").value.toLowerCase();
+            const roomCards = document.querySelectorAll(".room-card");
+
+            roomCards.forEach(card => {
+                const roomName = card.querySelector(".card-room-title").innerText.toLowerCase();
+
+                if (roomName.includes(keyword)) {
                     card.style.display = "flex";
                 } else {
                     card.style.display = "none";
