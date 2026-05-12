@@ -30,9 +30,7 @@
                     <h3>Create Room</h3>
                 </div>
                 <div class="input-group">
-
                     <label>Pictures</label>
-
                     <input type="file"
                            id="pictureInput"
                            name="pictures"
@@ -54,14 +52,11 @@
                             <span onclick="this.parentElement.remove()">✕</span>
                         </div>
                         {% endif %}
-
                         <div class="upload-picture-box"
                              onclick="document.getElementById('pictureInput').click()">
                             +
                         </div>
-
                     </div>
-
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                     <div class="input-group">
@@ -86,12 +81,10 @@
                     <label>Description</label>
                     <textarea placeholder="Enter room description" name="desc" style="width:100%; height:120px; padding:12px; background-color:#ced4e0; border:none; border-radius:4px; box-sizing:border-box;">{{ room.desc if room else '' }}</textarea>
                 </div>
-
                 <div class="input-group">
                     <label for="capacityRange">
                         Capacity: <span id="capacityValue">{{ room.capacity if room else 50 }}</span>
                     </label>
-
                     <input type="range"
                            id="capacityRange"
                            min="0"
@@ -189,91 +182,68 @@
                             <div id="calendarDays" class="calendar-days"></div>
 
                         </div>
-
-                        <!-- RIGHT : Quick Selection -->
                         <div class="quick-selection-container">
-
                             <h3>Quick Selection</h3>
-
                             <div class="quick-selection-list">
-
                                 <label class="selection-option">
                                     <input type="checkbox" value="weekdays" onchange="applyQuickSelection()">
                                     <span>Weekdays</span>
                                 </label>
-
                                 <label class="selection-option">
                                     <input type="checkbox" value="weekends" onchange="applyQuickSelection()">
                                     <span>Weekends</span>
                                 </label>
-
                                 <hr>
-
                                 <label class="selection-option">
                                     <input type="checkbox" value="1" onchange="applyQuickSelection()">
                                     <span>Monday</span>
                                 </label>
-
                                 <label class="selection-option">
                                     <input type="checkbox" value="2" onchange="applyQuickSelection()">
                                     <span>Tuesday</span>
                                 </label>
-
                                 <label class="selection-option">
                                     <input type="checkbox" value="3" onchange="applyQuickSelection()">
                                     <span>Wednesday</span>
                                 </label>
-
                                 <label class="selection-option">
                                     <input type="checkbox" value="4" onchange="applyQuickSelection()">
                                     <span>Thursday</span>
                                 </label>
-
                                 <label class="selection-option">
                                     <input type="checkbox" value="5" onchange="applyQuickSelection()">
                                     <span>Friday</span>
                                 </label>
-
                                 <label class="selection-option">
                                     <input type="checkbox" value="6" onchange="applyQuickSelection()">
                                     <span>Saturday</span>
                                 </label>
-
                                 <label class="selection-option">
                                     <input type="checkbox" value="0" onchange="applyQuickSelection()">
                                     <span>Sunday</span>
                                 </label>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
 
                 <div class="input-group">
-
                     <label>Time Slots</label>
-
                     <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-
                         <input type="text"
                                id="timeRangeInput"
-                               placeholder="08:00 - 20:00"
+                               placeholder="08:30 - 20:30"
                                style="
                                 width:180px;
                                 height:42px;
                                 padding:0 12px;
                                 box-sizing:border-box;
                             ">
-
                         <select id="intervalSelect">
                             <option value="1">Every 1 hour</option>
                             <option value="2">Every 2 hours</option>
                             <option value="3">Every 3 hours</option>
                         </select>
-
                         <button type="button"
                                 class="solid-btn"
                                 onclick="generateTimeSlots()">
@@ -288,9 +258,7 @@
                                 gap:12px;
                                 flex-wrap:wrap;
                      "></div>
-
                 </div>
-
 
 
                 <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:30px;">
@@ -357,85 +325,56 @@
         </div>
     </div>
 
-    <!--Picture Upload Start-->
-
     <script>
-
         function previewPictures() {
-
             const input = document.getElementById("pictureInput");
             const previewArea = document.getElementById("picturePreviewArea");
-
             for (const file of input.files) {
-
                 const reader = new FileReader();
-
                 reader.onload = function (e) {
-
                     const pictureBox = document.createElement("div");
-
                     pictureBox.className = "picture-preview-box";
-
                     pictureBox.innerHTML = `
                                         <img src="${e.target.result}">
                                         <span onclick="this.parentElement.remove()">✕</span>
                                     `;
-
                     previewArea.appendChild(pictureBox);
                 };
-
                 reader.readAsDataURL(file);
             }
         }
 
     </script>
-    <!--Picture Upload End-->
     <script>
-        /*Room Status Switch Start*/
         const toggle = document.getElementById("roomStatusToggle");
         const statusText = document.querySelector(".status-text");
-
         toggle.addEventListener("change", function () {
-
             if (toggle.checked) {
-
                 statusText.innerText = "Enabled";
-
                 statusText.classList.remove("Disabled");
                 statusText.classList.add("Enabled");
                 document.getElementById("roomStatusInput").value = "Enabled";
-
             } else {
-
                 statusText.innerText = "Disabled";
-
                 statusText.classList.remove("Enabled");
                 statusText.classList.add("Disabled");
                 document.getElementById("roomStatusInput").value = "Disabled";
             }
-        }); /*Room Status Switch End*/
+        }); 
 
-        /*Capacity Slider Start*/
         function updateCapacity(value) {
             document.getElementById("capacityValue").innerText = value;
         }
-        /*Capacity Slider End*/
 
-        /*Promotion Code Input Start*/
         function createPromoCode() {
-
             const input = document.getElementById("promoInput");
             const promoArea = document.getElementById("promoArea");
-
             const code = input.value.trim();
-
             if (code === "") {
                 alert("Please enter a promotion code.");
                 return;
             }
-
             const promoId = "promo_" + Date.now();
-
             promoArea.innerHTML += `
                                                                     <div id="${promoId}" style="margin-bottom:15px;">
 
@@ -472,7 +411,6 @@
         }
 
         let currentPromoTarget = "";
-
         function removePromoCode(event, promoId) {
             event.stopPropagation();
             document.getElementById(promoId).remove();
@@ -489,17 +427,13 @@
         }
 
         function savePromoDates() {
-
             const start = document.getElementById("promoStartDate").value;
-            const end = document.getElementById("promoEndDate").value;
-
+            const end = document.getElementById("promoEndDate").value
             const target = document.querySelector(
                 "#" + currentPromoTarget + " .promo-date-label"
             );
-
             target.innerText = `Valid: ${start} to ${end}`;
             updatePromotionCodes();
-
             closePromoModal();
         }
 
@@ -546,19 +480,14 @@
         /*Dates Calender Start*/
         const calendarMonth = document.getElementById("calendarMonth");
         const calendarDays = document.getElementById("calendarDays");
-
         let currentDate = new Date();
 
         function renderCalendar() {
-
             calendarDays.innerHTML = "";
-
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
-
             const firstDay = new Date(year, month, 1).getDay();
             const lastDate = new Date(year, month + 1, 0).getDate();
-
             const monthNames = [
                 "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
@@ -573,15 +502,12 @@
             }
 
             for (let day = 1; day <= lastDate; day++) {
-
                 const dayDiv = document.createElement("div");
                 dayDiv.innerText = day;
-
                 dayDiv.addEventListener("click", function () {
                     dayDiv.classList.toggle("selected-day");
                     updateSelectedDates();
                 });
-
                 calendarDays.appendChild(dayDiv);
             }
         }
@@ -676,9 +602,8 @@
         /*Dates Calender End*/
     </script>
     <script>
-        /*Time Slots Start*/
+        
         function generateTimeSlots() {
-
             const rangeInput = document.getElementById("timeRangeInput").value;
             const interval = parseInt(document.getElementById("intervalSelect").value);
 
@@ -690,24 +615,18 @@
             }
 
             const parts = rangeInput.split("-");
-
             let start = parts[0].trim();
             let end = parts[1].trim();
-
             let startHour = parseInt(start.split(":")[0]);
             let endHour = parseInt(end.split(":")[0]);
-
             for (let hour = startHour; hour < endHour; hour += interval) {
-
                 const nextHour = hour + interval;
-
                 const slot = `
                                                 <div class="time-slot-tag">
                                                     ${String(hour).padStart(2, '0')}:00 - ${String(nextHour).padStart(2, '0')}:00
                                                     <span onclick="this.parentElement.remove(); updateTimeSlots();">✕</span>
                                                 </div>
                                             `;
-
                 timeSlotArea.innerHTML += slot;
             }
             updateTimeSlots();
@@ -739,12 +658,8 @@
             updateTimeSlots();
         }
         /*Time Slots End*/
+        
     </script>
-
-
-
-
-
 
 </body>
 </html>
