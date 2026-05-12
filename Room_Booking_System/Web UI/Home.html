@@ -37,17 +37,18 @@
 
                 <form method="POST" action="/">
                     <input type="hidden" id="role-input" name="role" value="student">
-                    
+
                     <div class="input-group">
                         <label for="username">Username/Email</label>
                         <input type="text" id="username" name="username" required>
                     </div>
-                    
+
                     <div class="input-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" required>
                     </div>
-                    
+
+
                     <div class="action-buttons">
                         <a href="/reset_password" class="forgot-link">Forget Password?</a>
                         <button type="submit">Login</button>
@@ -77,7 +78,14 @@
             document.getElementById('btn-student').classList.remove('active');
             document.getElementById('btn-staff').classList.remove('active');
             document.getElementById('btn-' + role).classList.add('active');
-        }
+
+            //Remove this part when testing
+             const username = document.getElementById("username");
+             const password = document.getElementById("password");
+             password.value = "password123";
+             username.value = role;
+             //End here
+                    }
     </script>
 </body>
 </html>
