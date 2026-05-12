@@ -90,7 +90,8 @@ def staff_create_room():
             "status": request.form.get("status"),
             "selected_dates": request.form.get("selected_dates"),
             "time_slots": request.form.get("time_slots"),
-            "promotion_codes": request.form.get("promotion_codes"),
+            "promotion_codes": request.form.get("promotion_codes"),            
+            "quick_selections": request.form.get("quick_selections"),
             "image": image_path,
         }
         create_room(room_data)
@@ -109,8 +110,9 @@ def staff_edit_room(room_id):
             "price": request.form.get("price"),
             "status": request.form.get("status"),
             "selected_dates": request.form.get("selected_dates"),
-            "time_slots": request.form.get("time_slots"),
-            "promotion_codes": request.form.get("promotion_codes")
+            "time_slots": request.form.get("time_slots"),            
+            "promotion_codes": request.form.get("promotion_codes"),
+            "quick_selections": request.form.get("quick_selections")
         }
         update_room(room_id, updated_data)
         return redirect(url_for("staff_dashboard"))

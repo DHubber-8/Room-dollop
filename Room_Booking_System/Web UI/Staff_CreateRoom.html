@@ -67,7 +67,8 @@
                         <label>Room Status</label>
 
                         <label class="status-switch">
-                            <input type="checkbox" id="roomStatusToggle" name="status" value="{{ room.status if room else 'Enabled' }}" checked>
+                            <input type="checkbox" id="roomStatusToggle"
+                                   {% if not room or room.status !='Disabled' %}checked{% endif %}>
                             <span class="status-slider">
                                 <span class="status-text {{ room.status if room else 'Enabled' }}">
                                     {{ room.status if room else 'Enabled' }}
@@ -119,11 +120,7 @@
                 <div class="input-group">
                     <label>Promotion Code</label>
 
-                    {% if room and room.promotion_codes %}
-                    <div style="margin-top:10px; color:#5b688c;">
-                        Saved promotion codes: {{ room.promotion_codes }}
-                    </div>
-                    {% endif %}
+                    
 
                     <div style="display:flex; align-items:center; gap:10px;">
                         <input type="text" id="promoInput" style="width:180px;" placeholder="Enter code">
@@ -159,11 +156,6 @@
                 <div class="input-group">
 
                     <label>Available Dates</label>
-                    {% if room and room.selected_dates %}
-                    <div style="margin-top:10px; color:#5b688c;">
-                        Saved dates: {{ room.selected_dates }}
-                    </div>
-                    {% endif %}
                     <div class="available-date-layout">
 
                         <!-- LEFT : Interactive Calendar -->
@@ -223,11 +215,11 @@
                                     <span>Friday</span>
                                 </label>
                                 <label class="selection-option">
-                                    <input type="checkbox" value="5" onchange="applyQuickSelection()">
+                                    <input type="checkbox" value="6" onchange="applyQuickSelection()">
                                     <span>Saturday</span>
                                 </label>
                                 <label class="selection-option">
-                                    <input type="checkbox" value="7" onchange="applyQuickSelection()">
+                                    <input type="checkbox" value="0" onchange="applyQuickSelection()">
                                     <span>Sunday</span>
                                 </label>
                             </div>
@@ -259,11 +251,6 @@
                         </button>
 
                     </div>
-                    {% if room and room.time_slots %}
-                    <div style="margin-top:10px; color:#5b688c;">
-                        Saved time slots: {{ room.time_slots }}
-                    </div>
-                    {% endif %}
                     <div id="timeSlotArea"
                          style="
                                 margin-top:20px;
@@ -290,12 +277,10 @@
                     {% endif %}
                     <input type="hidden" name="selected_dates" id="selectedDatesInput" value='{{ room.selected_dates if room else "" }}'>
                     <input type="hidden" name="time_slots" id="timeSlotsInput" value='{{ room.time_slots if room else "" }}'>
-                    <input type="hidden" name="status" id="roomStatusInput" value="Enabled">
                     <input type="hidden" name="promotion_codes" id="promotionCodesInput">
-                    <input type="hidden"
-                           name="status"
-                           id="roomStatusInput"
-                           value="{{ room.status if room else 'Enabled' }}">
+                    <input type="hidden" name="quick_selections" id="quickSelectionsInput" value='{{ room.quick_selections if room else "" }}'>
+
+                    <input type="hidden" name="status" id="roomStatusInput" value="{{ room.status if room else 'Enabled' }}">
                     <button type="submit" class="solid-btn">Save</button>
                 </div>
 
@@ -469,6 +454,30 @@
             document.getElementById("promotionCodesInput").value = JSON.stringify(promoList);
         }
 
+        const savedPromos = {{ (room.promotion_codes if room else 'null') | safe }};
+        if (savedPromos) {
+            const promos = savedPromos;
+            promos.forEach(p => {
+                const promoId = "promo_" + Date.now() + Math.random();
+                document.getElementById("promoArea").innerHTML += `
+            <div id="${promoId}" style="margin-bottom:15px;">
+                <span onclick="openPromoModal('${promoId}')"
+                    style="display:inline-block;background:#2c3549;color:white;
+                           padding:8px 15px;border-radius:20px;font-weight:bold;cursor:pointer;">
+                    ${p.code}
+                    <span onclick="removePromoCode(event, '${promoId}')" style="margin-left:8px;cursor:pointer;">×</span>
+                </span>
+                <div class="promo-date-label" style="font-size:13px;color:#5b688c;margin-top:8px;">${p.dates}</div>
+            </div>`;
+            });
+            updatePromotionCodes();
+        }
+
+
+        /*Promotion Code Input End*/
+
+
+        /*Dates Calender Start*/
         const calendarMonth = document.getElementById("calendarMonth");
         const calendarDays = document.getElementById("calendarDays");
         let currentDate = new Date();
@@ -506,9 +515,26 @@
         function changeMonth(direction) {
             currentDate.setMonth(currentDate.getMonth() + direction);
             renderCalendar();
+            restoreSavedDates();
         }
 
         renderCalendar();
+
+        function restoreSavedDates() {
+            const savedDays = {{ (room.selected_dates if room else 'null') | safe
+        }};
+        if (!savedDays) return;
+            const cells = document.querySelectorAll(".calendar-days div");
+
+            cells.forEach(cell => {
+                if (savedDays.includes(cell.innerText.trim())) {
+                    cell.classList.add("selected-day");
+                }
+            });
+        }
+
+        renderCalendar();
+        restoreSavedDates();
         function updateSelectedDates() {
 
             const selectedDays =
@@ -528,6 +554,7 @@
             const checkedValues = Array.from(
                 document.querySelectorAll(".selection-option input:checked")
             ).map(input => input.value);
+            document.getElementById("quickSelectionsInput").value = JSON.stringify(checkedValues);
 
             const calendarCells = document.querySelectorAll(".calendar-days div");
 
@@ -561,6 +588,18 @@
             });
             updateSelectedDates();
         }
+
+        // Restore saved quick selection checkboxes on edit
+        const savedQuickSelections = {{ (room.quick_selections if room else 'null') | safe }};
+        if (savedQuickSelections) {
+            document.querySelectorAll(".selection-option input").forEach(checkbox => {
+                if (savedQuickSelections.includes(checkbox.value)) {
+                    checkbox.checked = true;
+                }
+            });
+        }
+
+        /*Dates Calender End*/
     </script>
     <script>
         
@@ -604,6 +643,21 @@
 
             document.getElementById("timeSlotsInput").value = JSON.stringify(timeList);
         }
+
+        const savedSlots = {{ (room.time_slots if room else 'null') | safe }};
+        if (savedSlots) {
+            const slots = savedSlots;
+            const timeSlotArea = document.getElementById("timeSlotArea");
+            slots.forEach(slot => {
+                timeSlotArea.innerHTML += `
+                    <div class="time-slot-tag">
+                        ${slot}
+                        <span onclick="this.parentElement.remove(); updateTimeSlots();">✕</span>
+                    </div>`;
+            });
+            updateTimeSlots();
+        }
+        /*Time Slots End*/
         
     </script>
 
