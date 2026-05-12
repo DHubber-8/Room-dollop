@@ -1,0 +1,704 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Create Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Theme_Staff.css') }}">
+</head>
+
+<body class="dashboard-body">
+
+    <header class="dash-top-bar">
+        <div class="dash-logo">UOW</div>
+        <h2 class="dash-title">Staff Room Management</h2>
+        <div class="dash-nav-items">
+            <a href="/logout" class="solid-btn" style="text-decoration:none;">Logout</a>
+        </div>
+    </header>
+
+    <div class="dash-layout">
+
+
+        <main class="dash-main-content">
+            <form method="POST"
+                  action="{{ url_for('staff_edit_room', room_id=room.room_id) if room else url_for('staff_create_room') }}"
+                  enctype="multipart/form-data">
+
+                <div class="section-header">
+                    <h3>Create Room</h3>
+                </div>
+                <div class="input-group">
+
+                    <label>Pictures</label>
+
+                    <input type="file"
+                           id="pictureInput"
+                           name="pictures"
+                           multiple
+                           accept="image/*"
+                           onchange="previewPictures()"
+                           hidden>
+
+                    <div id="picturePreviewArea"
+                         style="
+                                margin-top:20px;
+                                display:flex;
+                                gap:15px;
+                                flex-wrap:wrap;
+                          ">
+                        {% if room and room.image %}
+                        <div class="picture-preview-box">
+                            <img src="{{ url_for('static', filename=room.image) }}">
+                            <span onclick="this.parentElement.remove()">✕</span>
+                        </div>
+                        {% endif %}
+
+                        <div class="upload-picture-box"
+                             onclick="document.getElementById('pictureInput').click()">
+                            +
+                        </div>
+
+                    </div>
+
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div class="input-group">
+                        <label>Room Name</label>
+                        <input type="text" name="room_name" value="{{ room.name if room else '' }}" style="width:300px;" placeholder="Enter room name">
+                    </div>
+                    <div class="input-group">
+                        <label>Room Status</label>
+
+                        <label class="status-switch">
+                            <input type="checkbox" id="roomStatusToggle" name="status" value="{{ room.status if room else 'Enabled' }}" checked>
+                            <span class="status-slider">
+                                <span class="status-text {{ room.status if room else 'Enabled' }}">
+                                    {{ room.status if room else 'Enabled' }}
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Description</label>
+                    <textarea placeholder="Enter room description" name="desc" style="width:100%; height:120px; padding:12px; background-color:#ced4e0; border:none; border-radius:4px; box-sizing:border-box;">{{ room.desc if room else '' }}</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="capacityRange">
+                        Capacity: <span id="capacityValue">{{ room.capacity if room else 50 }}</span>
+                    </label>
+
+                    <input type="range"
+                           id="capacityRange"
+                           min="0"
+                           max="500"
+                           value="50"
+                           oninput="updateCapacity(this.value)"
+                           style="width:100%;"
+                           name="capacity">
+                </div>
+
+                <div class="input-group">
+                    <label>Price</label>
+
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span>$</span>
+
+                        <input type="text"
+                               placeholder=""
+                               style="
+                width:50px;
+                padding:10px;
+                background-color:#ced4e0;
+                border:none;
+                border-radius:4px;
+            "
+                               name="price" value="{{ room.price if room else '' }}">
+
+
+                        <span>/ hour</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Promotion Code</label>
+
+                    {% if room and room.promotion_codes %}
+                    <div style="margin-top:10px; color:#5b688c;">
+                        Saved promotion codes: {{ room.promotion_codes }}
+                    </div>
+                    {% endif %}
+
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <input type="text" id="promoInput" style="width:180px;" placeholder="Enter code">
+                        <button type="button" class="solid-btn" onclick="createPromoCode()">Create</button>
+                    </div>
+
+                    <input type="hidden" name="promotion_codes" id="promotionCodesInput">
+
+                    <div id="promoArea" style="margin-top:15px;"></div>
+                </div>
+
+                <div id="promoModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); justify-content:center; align-items:center;">
+                    <div style="background:white; padding:25px; border-radius:8px; width:350px;">
+                        <h3 style="margin-top:0;">Set Promotion Dates</h3>
+
+                        <div class="input-group">
+                            <label>Start Date</label>
+                            <input type="date" id="promoStartDate" name="promoStartDate">
+                        </div>
+
+                        <div class="input-group">
+                            <label>End Date</label>
+                            <input type="date" id="promoEndDate" name="promoEndDate">
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; gap:10px;">
+                            <button type="button" class="outline-btn" onclick="closePromoModal()">Cancel</button>
+                            <button type="button" class="solid-btn" onclick="savePromoDates()">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+
+                    <label>Available Dates</label>
+                    {% if room and room.selected_dates %}
+                    <div style="margin-top:10px; color:#5b688c;">
+                        Saved dates: {{ room.selected_dates }}
+                    </div>
+                    {% endif %}
+                    <div class="available-date-layout">
+
+                        <!-- LEFT : Interactive Calendar -->
+                        <div class="calendar-container">
+
+                            <div class="calendar-header">
+                                <button type="button" class="outline-btn" onclick="changeMonth(-1)">◀</button>
+
+                                <h3 id="calendarMonth"></h3>
+
+                                <button type="button" class="outline-btn" onclick="changeMonth(1)">▶</button>
+                            </div>
+
+                            <div class="calendar-weekdays">
+                                <div>Sun</div>
+                                <div>Mon</div>
+                                <div>Tue</div>
+                                <div>Wed</div>
+                                <div>Thu</div>
+                                <div>Fri</div>
+                                <div>Sat</div>
+                            </div>
+
+                            <div id="calendarDays" class="calendar-days"></div>
+
+                        </div>
+
+                        <!-- RIGHT : Quick Selection -->
+                        <div class="quick-selection-container">
+
+                            <h3>Quick Selection</h3>
+
+                            <div class="quick-selection-list">
+
+                                <label class="selection-option">
+                                    <input type="checkbox" value="weekdays" onchange="applyQuickSelection()">
+                                    <span>Weekdays</span>
+                                </label>
+
+                                <label class="selection-option">
+                                    <input type="checkbox" value="weekends" onchange="applyQuickSelection()">
+                                    <span>Weekends</span>
+                                </label>
+
+                                <hr>
+
+                                <label class="selection-option">
+                                    <input type="checkbox" value="1" onchange="applyQuickSelection()">
+                                    <span>Monday</span>
+                                </label>
+
+                                <label class="selection-option">
+                                    <input type="checkbox" value="2" onchange="applyQuickSelection()">
+                                    <span>Tuesday</span>
+                                </label>
+
+                                <label class="selection-option">
+                                    <input type="checkbox" value="3" onchange="applyQuickSelection()">
+                                    <span>Wednesday</span>
+                                </label>
+
+                                <label class="selection-option">
+                                    <input type="checkbox" value="4" onchange="applyQuickSelection()">
+                                    <span>Thursday</span>
+                                </label>
+
+                                <label class="selection-option">
+                                    <input type="checkbox" value="5" onchange="applyQuickSelection()">
+                                    <span>Friday</span>
+                                </label>
+
+                                <label class="selection-option">
+                                    <input type="checkbox" value="5" onchange="applyQuickSelection()">
+                                    <span>Saturday</span>
+                                </label>
+
+                                <label class="selection-option">
+                                    <input type="checkbox" value="7" onchange="applyQuickSelection()">
+                                    <span>Sunday</span>
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Time Slots</label>
+
+                    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+
+                        <input type="text"
+                               id="timeRangeInput"
+                               placeholder="08:00 - 20:00"
+                               style="
+                                width:180px;
+                                height:42px;
+                                padding:0 12px;
+                                box-sizing:border-box;
+                            ">
+
+                        <select id="intervalSelect">
+                            <option value="1">Every 1 hour</option>
+                            <option value="2">Every 2 hours</option>
+                            <option value="3">Every 3 hours</option>
+                        </select>
+
+                        <button type="button"
+                                class="solid-btn"
+                                onclick="generateTimeSlots()">
+                            Create
+                        </button>
+
+                    </div>
+                    {% if room and room.time_slots %}
+                    <div style="margin-top:10px; color:#5b688c;">
+                        Saved time slots: {{ room.time_slots }}
+                    </div>
+                    {% endif %}
+                    <div id="timeSlotArea"
+                         style="
+                                margin-top:20px;
+                                display:flex;
+                                gap:12px;
+                                flex-wrap:wrap;
+                     "></div>
+
+                </div>
+
+
+
+                <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:30px;">
+                    <a href="{{ url_for('staff_dashboard') }}"
+                       class="outline-btn"
+                       style="text-decoration:none;">
+                        Cancel
+                    </a>
+                    {% if room %}
+                    <a href="{{ url_for('staff_delete_room', room_id=room.room_id) }}"
+                       class="solid-btn"
+                       style="background-color:#d32f2f; text-decoration:none;"
+                       onclick="return confirm('Are you sure you want to delete this room?');">
+                        Delete
+                    </a>
+                    {% endif %}
+                    <input type="hidden" name="selected_dates" id="selectedDatesInput" value='{{ room.selected_dates if room else "" }}'>
+                    <input type="hidden" name="time_slots" id="timeSlotsInput" value='{{ room.time_slots if room else "" }}'>
+                    <input type="hidden" name="status" id="roomStatusInput" value="Enabled">
+                    <input type="hidden" name="promotion_codes" id="promotionCodesInput">
+                    <input type="hidden"
+                           name="status"
+                           id="roomStatusInput"
+                           value="{{ room.status if room else 'Enabled' }}">
+                    <button type="submit" class="solid-btn">Save</button>
+                </div>
+
+            </form>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-logo">UOW</div>
+        <div class="footer-bottom">
+            <div>Copyright 2026 University Of Wollongong.</div>
+            <div class="footer-links">
+                <a href="#">Feedback Form</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Cookie Policy</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Time Slot Modal -->
+    <div id="timeModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:8px; width:350px;">
+            <h3 style="margin-top:0; color:#2c3549;">Edit Time Slot</h3>
+
+            <div class="input-group">
+                <label>Start Time</label>
+                <input type="text" placeholder="08:30">
+            </div>
+
+            <div class="input-group">
+                <label>End Time</label>
+                <input type="text" placeholder="09:30">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="solid-btn" onclick="closeTimeModal()">Save</button>
+                <button class="solid-btn" style="background-color:#d32f2f;">Delete</button>
+                <button class="outline-btn" onclick="closeTimeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!--Picture Upload Start-->
+
+    <script>
+
+        function previewPictures() {
+
+            const input = document.getElementById("pictureInput");
+            const previewArea = document.getElementById("picturePreviewArea");
+
+            for (const file of input.files) {
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    const pictureBox = document.createElement("div");
+
+                    pictureBox.className = "picture-preview-box";
+
+                    pictureBox.innerHTML = `
+                                        <img src="${e.target.result}">
+                                        <span onclick="this.parentElement.remove()">✕</span>
+                                    `;
+
+                    previewArea.appendChild(pictureBox);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+    </script>
+    <!--Picture Upload End-->
+    <script>
+        /*Room Status Switch Start*/
+        const toggle = document.getElementById("roomStatusToggle");
+        const statusText = document.querySelector(".status-text");
+
+        toggle.addEventListener("change", function () {
+
+            if (toggle.checked) {
+
+                statusText.innerText = "Enabled";
+
+                statusText.classList.remove("Disabled");
+                statusText.classList.add("Enabled");
+                document.getElementById("roomStatusInput").value = "Enabled";
+
+            } else {
+
+                statusText.innerText = "Disabled";
+
+                statusText.classList.remove("Enabled");
+                statusText.classList.add("Disabled");
+                document.getElementById("roomStatusInput").value = "Disabled";
+            }
+        }); /*Room Status Switch End*/
+
+        /*Capacity Slider Start*/
+        function updateCapacity(value) {
+            document.getElementById("capacityValue").innerText = value;
+        }
+        /*Capacity Slider End*/
+
+        /*Promotion Code Input Start*/
+        function createPromoCode() {
+
+            const input = document.getElementById("promoInput");
+            const promoArea = document.getElementById("promoArea");
+
+            const code = input.value.trim();
+
+            if (code === "") {
+                alert("Please enter a promotion code.");
+                return;
+            }
+
+            const promoId = "promo_" + Date.now();
+
+            promoArea.innerHTML += `
+                                                                    <div id="${promoId}" style="margin-bottom:15px;">
+
+                                                                        <span
+                                                                            onclick="openPromoModal('${promoId}')"
+                                                                            style="
+                                                                                display:inline-block;
+                                                                                background:#2c3549;
+                                                                                color:white;
+                                                                                padding:8px 15px;
+                                                                                border-radius:20px;
+                                                                                font-weight:bold;
+                                                                                cursor:pointer;
+                                                                            "
+                                                                        >
+                                                                            ${code}
+                                                                            <span
+                                                                                onclick="removePromoCode(event, '${promoId}')"
+                                                                                style="margin-left:8px; cursor:pointer;"
+                                                                            >
+                                                                                ×
+                                                                            </span>
+                                                                        </span>
+
+                                                                        <div class="promo-date-label" style="font-size:13px; color:#5b688c; margin-top:8px;">
+                                                                            Click code to configure validity dates
+                                                                        </div>
+
+                                                                    </div>
+                                                                `;
+
+            input.value = "";
+            updatePromotionCodes();
+        }
+
+        let currentPromoTarget = "";
+
+        function removePromoCode(event, promoId) {
+            event.stopPropagation();
+            document.getElementById(promoId).remove();
+            updatePromotionCodes();
+        }
+
+        function openPromoModal(promoId) {
+            currentPromoTarget = promoId;
+            document.getElementById("promoModal").style.display = "flex";
+        }
+
+        function closePromoModal() {
+            document.getElementById("promoModal").style.display = "none";
+        }
+
+        function savePromoDates() {
+
+            const start = document.getElementById("promoStartDate").value;
+            const end = document.getElementById("promoEndDate").value;
+
+            const target = document.querySelector(
+                "#" + currentPromoTarget + " .promo-date-label"
+            );
+
+            target.innerText = `Valid: ${start} to ${end}`;
+            updatePromotionCodes();
+
+            closePromoModal();
+        }
+
+        function updatePromotionCodes() {
+            const promoBlocks = document.querySelectorAll("[id^='promo_']");
+            const promoList = [];
+
+            promoBlocks.forEach(block => {
+                const code = block.querySelector("span").innerText.replace("×", "").trim();
+                const dates = block.querySelector(".promo-date-label").innerText.trim();
+
+                promoList.push({
+                    code: code,
+                    dates: dates
+                });
+            });
+
+            document.getElementById("promotionCodesInput").value = JSON.stringify(promoList);
+        }
+
+
+        /*Promotion Code Input End*/
+
+
+        /*Dates Calender Start*/
+        const calendarMonth = document.getElementById("calendarMonth");
+        const calendarDays = document.getElementById("calendarDays");
+
+        let currentDate = new Date();
+
+        function renderCalendar() {
+
+            calendarDays.innerHTML = "";
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            calendarMonth.innerText = `${monthNames[month]} ${year}`;
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement("div");
+                emptyDiv.style.visibility = "hidden";
+                calendarDays.appendChild(emptyDiv);
+            }
+
+            for (let day = 1; day <= lastDate; day++) {
+
+                const dayDiv = document.createElement("div");
+                dayDiv.innerText = day;
+
+                dayDiv.addEventListener("click", function () {
+                    dayDiv.classList.toggle("selected-day");
+                    updateSelectedDates();
+                });
+
+                calendarDays.appendChild(dayDiv);
+            }
+        }
+
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        renderCalendar();
+        function updateSelectedDates() {
+
+            const selectedDays =
+                document.querySelectorAll(".selected-day");
+
+            const dates = [];
+
+            selectedDays.forEach(day => {
+                dates.push(day.innerText);
+            });
+
+            document.getElementById("selectedDatesInput").value =
+                JSON.stringify(dates);
+        }
+
+        function applyQuickSelection() {
+            const checkedValues = Array.from(
+                document.querySelectorAll(".selection-option input:checked")
+            ).map(input => input.value);
+
+            const calendarCells = document.querySelectorAll(".calendar-days div");
+
+            calendarCells.forEach(cell => {
+                const dayNumber = parseInt(cell.innerText);
+                if (!dayNumber) return;
+
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                const dayOfWeek = new Date(year, month, dayNumber).getDay();
+
+                let shouldSelect = false;
+
+                if (checkedValues.includes("weekdays") && dayOfWeek >= 1 && dayOfWeek <= 5) {
+                    shouldSelect = true;
+                }
+
+                if (checkedValues.includes("weekends") && (dayOfWeek === 0 || dayOfWeek === 6)) {
+                    shouldSelect = true;
+                }
+
+                if (checkedValues.includes(dayOfWeek.toString())) {
+                    shouldSelect = true;
+                }
+
+                if (shouldSelect) {
+                    cell.classList.add("selected-day");
+                } else {
+                    cell.classList.remove("selected-day");
+                }
+            });
+            updateSelectedDates();
+        }
+
+        /*Dates Calender End*/
+    </script>
+    <script>
+        /*Time Slots Start*/
+        function generateTimeSlots() {
+
+            const rangeInput = document.getElementById("timeRangeInput").value;
+            const interval = parseInt(document.getElementById("intervalSelect").value);
+
+            const timeSlotArea = document.getElementById("timeSlotArea");
+
+            if (!rangeInput.includes("-")) {
+                alert("Invalid time range.");
+                return;
+            }
+
+            const parts = rangeInput.split("-");
+
+            let start = parts[0].trim();
+            let end = parts[1].trim();
+
+            let startHour = parseInt(start.split(":")[0]);
+            let endHour = parseInt(end.split(":")[0]);
+
+            for (let hour = startHour; hour < endHour; hour += interval) {
+
+                const nextHour = hour + interval;
+
+                const slot = `
+                                                <div class="time-slot-tag">
+                                                    ${String(hour).padStart(2, '0')}:00 - ${String(nextHour).padStart(2, '0')}:00
+                                                    <span onclick="this.parentElement.remove(); updateTimeSlots();">✕</span>
+                                                </div>
+                                            `;
+
+                timeSlotArea.innerHTML += slot;
+            }
+            updateTimeSlots();
+        }
+
+        function updateTimeSlots() {
+            const slots = document.querySelectorAll(".time-slot-tag");
+            const timeList = [];
+
+            slots.forEach(slot => {
+                const text = slot.innerText.replace("✕", "").trim();
+                timeList.push(text);
+            });
+
+            document.getElementById("timeSlotsInput").value = JSON.stringify(timeList);
+        }
+        /*Time Slots End*/
+    </script>
+
+
+
+
+
+
+</body>
+</html>
