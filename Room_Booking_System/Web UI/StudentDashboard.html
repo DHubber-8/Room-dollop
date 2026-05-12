@@ -104,15 +104,26 @@
                     <h3 style="margin-top: 0;">{{ booking.room_name }}</h3>
                     <p style="color: #5b688c; margin: 5px 0;"><strong>Date:</strong> {{ booking.date }}</p>
                     <p style="color: #5b688c; margin: 5px 0;"><strong>Time:</strong> {{ booking.time }}</p>
-                    <p style="color: #2e7d32; margin: 5px 0; font-weight: bold;">Status: {{ booking.status }}</p>
-                {% if booking.status == "Confirmed" %}
+                    <p style="color: #5b688c; margin: 5px 0;">
+                        <strong>Status:</strong> 
+                        {% if booking.status == 'Confirmed' or booking.status == 'Completed' %}
+                        <span style="font-weight: bold; color: #2e7d32;">
+                            {{ booking.status }}
+                        </span>
+                        {% elif booking.status == 'Cancelled' %}
+                        <span style="font-weight: bold; color: #d32f2f;">
+                            {{ booking.status }}
+                        </span>
+                        {% endif %}
+                    </p>
+                {% if booking.status == 'Confirmed' %}
                     <button class="solid-btn" style="margin-top: 15px; width: 100%;" 
-                            onclick="openModifyBooking('{{ booking.room_name }}', '{{ booking.date }}', '{{ booking.capacity }}', '{{ booking.block }}')">
+                            onclick="openModifyBooking('{{ booking.room_name }}', '{{ booking.date }}', '{{ booking.capacity }}', '{{ booking.block }}', '{{ booking.time }}')">
                         View / Modify
                     </button>
                 {% else %}
                     <button class="solid-btn" style="margin-top: 15px; width: 100%; background-color: #f0f2f5; color: #a0aec0; border: 1px solid #e0e5ed; cursor: not-allowed;" disabled>
-                        {{ booking.status }} - Locked
+                        {{ booking.status }}
                     </button>
                 {% endif %}
                 </div>
@@ -238,11 +249,9 @@
         };
 
         function applyFilters() {
-            
             const dateValue = document.getElementById('filter-date').value;
             const capacityValue = document.getElementById('filter-capacity').value;
             const blockValue = document.getElementById('filter-block').value;
-            
             const allRooms = document.querySelectorAll('.searchable-room');
             
             allRooms.forEach(card => {
@@ -323,7 +332,7 @@
             selectedSlotsCount = 0; 
         }
         
-        function openModifyBooking(roomName, bookingDate, roomCapacity, roomBlock) {
+        function openModifyBooking(roomName, bookingDate, roomCapacity, roomBlock, bookingTime) {
             sourceView = 'reservations-view';
             const allViews = document.querySelectorAll('.content-view');
             allViews.forEach(view => view.style.display = 'none');
@@ -342,10 +351,17 @@
             allSlots.forEach(slot => {
                 slot.classList.remove('selected');
                 slot.disabled = false; 
-
                 
-                if (Math.random() < 0.35) {
-                    slot.disabled = true;
+                if (slot.innerText.trim() === bookingTime.trim()) {
+                    
+                    slot.classList.add('selected');
+                    selectedSlotsCount = 1; 
+                
+                } else {
+                
+                    if (Math.random() < 0.35) {
+                        slot.disabled = true;
+                    }
                 }
             });
         }
@@ -384,7 +400,7 @@
                 alert("Please select at least one time slot!");
                 return;
             }
-            alert("Success! Time slots confirmed. (Backend connection coming next!)");
+            window.location.href = "/student/payment";
         }
         
         function claimOffer() {
