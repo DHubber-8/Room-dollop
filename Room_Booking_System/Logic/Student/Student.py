@@ -1,11 +1,14 @@
 class Student(object):
     def __init__(self):
-        pass
+        self.student_database = {
+            "student": "password123",
+            "student@uowmail.edu.au": "password123",
+        }
     def check_student_login(self,username, password):
-    # This function only cares about student verification
-        if username == 'student' and password == 'password123':
+        if username in self.student_database and self.student_database[username] == password:
             return True
         return False
+    
 
     def get_available_rooms(self):
         return [

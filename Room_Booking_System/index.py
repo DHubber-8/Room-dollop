@@ -1,5 +1,5 @@
 # Logic/index.py
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, flash
 
 from Logic.Student.Student import Student
 from Logic.Staff.Staff import Staff
@@ -27,7 +27,8 @@ def home():
             session['username'] = username
             session['role'] = 'staff'
             return redirect(url_for('staff_dashboard')) # can link a real page later
-            
+        else:
+            flash("Invalid username or password. Please try again.", "error")
     return render_template('Home.html')
 
 # --- RESET PASSWORD ROUTE ---

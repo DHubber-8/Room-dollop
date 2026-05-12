@@ -1,9 +1,11 @@
 class Staff(object):
-    pass
-
+    def __init__(self):
+        self.student_database = {
+            "staff": "password123",
+            "staff@uowmail.edu.au": "password123",
+        }
     def check_staff_login(self, username, password):
-    # This function only cares about staff verification
-        if username == 'staff' and password == 'password123':
+        if username in self.student_database and self.student_database[username] == password:
             return True
         return False
 
