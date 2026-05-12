@@ -134,5 +134,13 @@ def staff_delete_room(room_id):
     delete_room(room_id)
     return redirect(url_for("staff_dashboard"))
 
+@app.route('/student/payment')
+def student_payment():
+    return render_template('Payment_Student.html')
+
+@app.route('/student/thankyou')
+def student_thankyou():
+    return render_template('ThankyouPage_Student.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

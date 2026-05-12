@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Payment Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Theme_Staff.css') }}">
+</head>
+<body class="dashboard-body">
+
+    <header class="dash-top-bar">
+        <div class="dash-logo">Logo</div>
+        <h2 class="dash-title">Student Booking</h2>
+        <div class="dash-nav-items">
+            <a href="/logout" class="solid-btn" style="text-decoration:none;">Logout</a>
+        </div>
+    </header>
+
+    <main class="dash-main-content">
+
+        <h3 style="margin-top:0; color:#2c3549;">Payment Page</h3>
+
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+
+            <!-- LEFT SIDE: ORDER DETAILS -->
+            <div style="flex:1; min-width:320px; border:1px solid #2c3549; border-radius:4px; padding:20px;">
+                <h3 style="margin-top:0;">Your Order</h3>
+
+                <div style="height:180px; background:#eef1f6; border:1px solid #8c96a8; display:flex; justify-content:center; align-items:center; margin-bottom:15px;">
+                    <img src="{{ url_for('static', filename='PicturesRoom/Study Room C.3.5.jpg') }}"
+                         alt="Room Image"
+                         style="width:100%; height:100%; object-fit:cover;">
+                </div>
+
+                <h2>Description</h2>
+                <p style="color:#5b688c;">
+                    Room Name: Study Room 1<br>
+                    Location: UOW Campus - B.R11<br>
+                    Date: 18 May 2026<br>
+                    Capacity: 6 Pax<br>
+                    Booking Slot: 09:30AM - 11:30AM<br>
+                    Duration: 2 Hours
+                </p>
+            </div>
+
+            <!-- RIGHT SIDE: PAYMENT SUMMARY -->
+            <div style="flex:1; min-width:320px; border:1px solid #2c3549; border-radius:4px; padding:20px;">
+
+                <h3 style="margin-top:0;">Payment Summary</h3>
+
+                <div style="display:flex; justify-content:space-between;">
+                    <strong>2 Hours @ $5.00/Hr</strong>
+                    <strong>$10.00</strong>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; margin-top:5px;">
+                    <strong>GST 9% Included</strong>
+                    <strong>$0.00</strong>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; margin-top:5px;">
+                    <strong>Promo</strong>
+                    <strong id="promoAmount">$0.00</strong>
+                </div>
+
+                <hr>
+
+                <div style="display:flex; justify-content:space-between; font-size:18px;">
+                    <strong>Total Amount Due:</strong>
+                    <strong id="totalAmount">$10.00</strong>
+                </div>
+
+                <hr>
+
+                <label><strong>Select Promo Code</strong></label>
+                <select id="promoCode" onchange="applyPromo()" style="width:100%; padding:10px; margin-top:8px; margin-bottom:20px;">
+                    <option value="none">No Promo Code</option>
+                    <option value="STUDENT2">STUDENT2 - $2 Off</option>
+                    <option value="QUIET5">QUIET5 - $5 Off</option>
+                </select>
+
+                <h3>Select Payment Method</h3>
+                <p>🟢 QR Payment</p>
+
+                <div style="text-align:center; margin:20px 0;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=RoomBookingPayment"
+                         alt="QR Code">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:25px;">
+                    <button class="solid-btn" style="background:#cbd5e1; color:#2c3549;" onclick="editBooking()">
+                        Edit Booking
+                    </button>
+
+                    <button class="solid-btn" onclick="confirmPayment()">
+                        Confirm & Pay
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-logo">UOW</div>
+        <div class="footer-bottom">
+            <div>Copyright 2026 Company Name.</div>
+            <div class="footer-links">
+                <a href="#">Feedback Form</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Cookie Policy</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>const originalTotal = 10.00;
+
+    function applyPromo() {
+        const promoCode = document.getElementById("promoCode").value;
+        let discount = 0;
+
+        if (promoCode === "STUDENT2") {
+            discount = 2;
+        } else if (promoCode === "QUIET5") {
+            discount = 5;
+        }
+
+        const finalTotal = originalTotal - discount;
+
+        if (discount === 0) {
+            document.getElementById("promoAmount").innerText = "$0.00";
+        } else {
+            document.getElementById("promoAmount").innerText = "- $" + discount.toFixed(2);
+        }
+
+        document.getElementById("totalAmount").innerText = "$" + finalTotal.toFixed(2);
+    }
+
+    function confirmPayment() {
+        window.location.href = "/student/thankyou";
+    }
+
+    function editBooking() {
+        window.location.href = "/student/dashboard";
+    }</script>
+
+</body>
+</html>
