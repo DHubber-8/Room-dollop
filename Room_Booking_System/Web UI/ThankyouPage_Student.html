@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Theme_Staff.css') }}">
+</head>
+<body class="dashboard-body">
+
+    <header class="dash-top-bar">
+        <div class="dash-logo">Logo</div>
+        <h2 class="dash-title">Student Booking</h2>
+        <div class="dash-nav-items">
+            <a href="/logout" class="solid-btn" style="text-decoration:none;">Logout</a>
+        </div>
+    </header>
+
+    <main class="dash-main-content">
+
+        <h3 style="margin-top:0; color:#2c3549;">Payment</h3>
+
+        <div style="border:1px solid #2c3549; min-height:500px; display:flex; justify-content:center; align-items:center; text-align:center;">
+
+            <div>
+                <h1 style="color:#2c3549; font-size:36px; margin-bottom:10px;">
+                    THANK YOU FOR<br>BOOKING
+                </h1>
+
+                <p style="font-weight:bold; color:#5b688c;">
+                    *Your booking confirmation will be sent to your school email.
+                </p>
+
+                <div style="margin-top:35px;">
+                    <button class="solid-btn" onclick="goBack()">
+                        ← Go Back
+                    </button>
+
+                    <button class="outline-btn" onclick="printReceipt()" style="margin-left:10px;">
+                        Print Receipt
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-logo">UOW</div>
+        <div class="footer-bottom">
+            <div>Copyright 2026 Company Name.</div>
+            <div class="footer-links">
+                <a href="#">Feedback Form</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Cookie Policy</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>function goBack() {
+    window.location.href = "/student_dashboard";
+    }
+
+    function printReceipt() {
+        window.print();
+    }</script>
+
+</body>
+</html>
