@@ -24,7 +24,7 @@
                     <button type="button" id="btn-student" class="active" onclick="setRole('student')">Student</button>
                     <button type="button" id="btn-staff" onclick="setRole('staff')">Staff</button>
                 </div>
-                
+
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -39,7 +39,7 @@
                     <input type="hidden" id="role-input" name="role" value="student">
                     
                     <div class="input-group">
-                        <label for="username">Username</label>
+                        <label for="username">Username/Email</label>
                         <input type="text" id="username" name="username" required>
                     </div>
                     
