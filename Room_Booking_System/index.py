@@ -73,22 +73,16 @@ def logout():
 # --- STAFF CREATE ROOM ROUTE ---
 @app.route("/Staff_CreateRoom", methods=["GET", "POST"])
 def staff_create_room():
-
     if request.method == "POST":
-         picture = request.files.getlist("pictures")
-
-         image_path = ""
-
-         if picture and picture[0].filename != "":
-
+        picture = request.files.getlist("pictures")
+        image_path = ""
+        if picture and picture[0].filename != "":
             image_file = picture[0]
-
             image_path = "PicturesRoom/" + image_file.filename
-
             image_file.save(
                 "static/" + image_path
             )
-         room_data = {
+        room_data = {
             "name": request.form.get("room_name"),
             "desc": request.form.get("desc"),
             "capacity": request.form.get("capacity"),
@@ -99,18 +93,14 @@ def staff_create_room():
             "promotion_codes": request.form.get("promotion_codes"),
             "image": image_path,
         }
-
-         create_room(room_data)
-
-         return redirect(url_for("staff_dashboard"))
-
+        create_room(room_data)
+        return redirect(url_for("staff_dashboard"))
     return render_template("Staff_CreateRoom.html")
 
 
 @app.route("/Staff_EditRoom/<int:room_id>", methods=["GET", "POST"])
 def staff_edit_room(room_id):
     room = get_room_by_id(room_id)
-
     if request.method == "POST":
         updated_data = {
             "name": request.form.get("room_name"),
@@ -122,10 +112,8 @@ def staff_edit_room(room_id):
             "time_slots": request.form.get("time_slots"),
             "promotion_codes": request.form.get("promotion_codes")
         }
-
         update_room(room_id, updated_data)
         return redirect(url_for("staff_dashboard"))
-
     return render_template("Staff_CreateRoom.html", room=room)
 
 

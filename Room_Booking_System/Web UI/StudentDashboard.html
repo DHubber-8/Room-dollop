@@ -249,11 +249,9 @@
         };
 
         function applyFilters() {
-            
             const dateValue = document.getElementById('filter-date').value;
             const capacityValue = document.getElementById('filter-capacity').value;
             const blockValue = document.getElementById('filter-block').value;
-            
             const allRooms = document.querySelectorAll('.searchable-room');
             
             allRooms.forEach(card => {
@@ -402,7 +400,7 @@
                 alert("Please select at least one time slot!");
                 return;
             }
-            alert("Success! Time slots confirmed. (Backend connection coming next!)");
+            window.location.href = "/student/payment";
         }
         
         function claimOffer() {
