@@ -132,5 +132,12 @@ def student_payment():
 def student_thankyou():
     return render_template('ThankyouPage_Student.html')
 
+@app.route('/Wireframe', methods=['GET', 'POST'])
+def staff_wireframe():
+    if request.method == 'POST':
+        return redirect(url_for('home'))
+
+    return render_template('Wireframe.html', room=None)
+
 if __name__ == '__main__':
     app.run(debug=True)
