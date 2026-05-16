@@ -750,3 +750,59 @@
     }
 
 /*Create Floating Button Start*/
+/*wireframe Start*/
+.wire-card {
+    background: #ffffff;
+    border: 1px solid #d9dee8;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+    .wire-card h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: #2c3549;
+    }
+
+.wire-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.wire-action-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.picture-preview-area {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.input-group input,
+.input-group textarea,
+select {
+    background-color: #ced4e0;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
+    .wire-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .wire-action-bar {
+        flex-direction: column;
+    }
+}
+/*wireframe Start*/
