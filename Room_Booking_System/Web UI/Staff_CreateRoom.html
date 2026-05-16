@@ -89,7 +89,7 @@
                            id="capacityRange"
                            min="0"
                            max="500"
-                           value="50"
+                           value="{{ room.capacity if room else 50 }}"
                            oninput="updateCapacity(this.value)"
                            style="width:100%;"
                            name="capacity">
@@ -280,6 +280,7 @@
                     <input type="hidden" name="promotion_codes" id="promotionCodesInput">
                     <input type="hidden" name="quick_selections" id="quickSelectionsInput" value='{{ room.quick_selections if room else "" }}'>
 
+                    <input type="hidden" name="quick_selections" id="quickSelectionsInput" value='{{ room.quick_selections if room else "" }}'>
                     <input type="hidden" name="status" id="roomStatusInput" value="{{ room.status if room else 'Enabled' }}">
                     <button type="submit" class="solid-btn">Save</button>
                 </div>
