@@ -28,7 +28,7 @@ class Student(object):
     def get_current_bookings(self, username):
         return [
             # Upcoming Bookings
-            {"id": "b1", "room_name": "Study Room C.3.4", "date": "15 May 2026", "time": "14:30 - 15:30", "status": "Confirmed", "category": "upcoming","capacity": 4, "block": "C"},
+            {"id": "b1", "room_name": "Study Room C.3.5", "date": "18 May 2026", "time": "09:30 - 11:30", "status": "Confirmed", "category": "upcoming","capacity": 6, "block": "C"},
             {"id": "b2", "room_name": "Computer Lab A.2.4", "date": "18 June 2026", "time": "10:30 - 12:30", "status": "Confirmed", "category": "upcoming","capacity": 25, "block": "A"},
             {"id": "b3", "room_name": "Lecture Hall B.1.2", "date": "20 June 2026", "time": "09:30 - 11:30", "status": "Confirmed", "category": "upcoming","capacity": 150, "block": "B"},
             

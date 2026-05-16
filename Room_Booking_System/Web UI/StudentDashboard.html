@@ -97,13 +97,13 @@
 
             <div class="card-grid">
                 {% for booking in bookings %}
-                <div class="room-card booking-item" data-category="{{ booking.category }}" style="background: white; border: 1px solid #e0e5ed; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <div id="booking-card-{{ loop.index }}" class="room-card booking-item" data-category="{{ booking.category }}" style="background: white; border: 1px solid #e0e5ed; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     <div style="background-color: #f0f2f5; height: 150px; border-radius: 4px; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 15px;">
                         <img src="{{ url_for('static', filename='PicturesRoom/' ~ booking.room_name ~ '.jpg') }}" alt="{{ booking.room_name }}" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <h3 style="margin-top: 0;">{{ booking.room_name }}</h3>
                     <p style="color: #5b688c; margin: 5px 0;"><strong>Date:</strong> {{ booking.date }}</p>
-                    <p style="color: #5b688c; margin: 5px 0;"><strong>Time:</strong> {{ booking.time }}</p>
+                    <p style="color: #5b688c; margin: 5px 0;"><strong>Time:</strong> <span id="booking-card-{{ loop.index }}-time">{{ booking.time }}</span></p>
                     <p style="color: #5b688c; margin: 5px 0;">
                         <strong>Status:</strong> 
                         {% if booking.status == 'Confirmed' or booking.status == 'Completed' %}
@@ -118,7 +118,7 @@
                     </p>
                 {% if booking.status == 'Confirmed' %}
                     <button class="solid-btn" style="margin-top: 15px; width: 100%;" 
-                            onclick="openModifyBooking('{{ booking.room_name }}', '{{ booking.date }}', '{{ booking.capacity }}', '{{ booking.block }}', '{{ booking.time }}')">
+                            onclick="openModifyBooking('booking-card-{{ loop.index }}', '{{ booking.room_name }}', '{{ booking.date }}', '{{ booking.capacity }}', '{{ booking.block }}', '{{ booking.time }}')">
                         View / Modify
                     </button>
                 {% else %}
@@ -298,7 +298,8 @@
         let selectedSlotsCount = 0;
         const MAX_SLOTS = 2;
         let sourceView = 'home-view';
-        
+        let currentEditingCardId = null;
+
         function openBookingSelection(roomId, roomName, roomCapacity, roomBlock) {
             sourceView = 'home-view';
             const allViews = document.querySelectorAll('.content-view');
@@ -332,7 +333,8 @@
             selectedSlotsCount = 0; 
         }
         
-        function openModifyBooking(roomName, bookingDate, roomCapacity, roomBlock, bookingTime) {
+        function openModifyBooking(cardId, roomName, bookingDate, roomCapacity, roomBlock, bookingTime) {
+            currentEditingCardId = cardId;
             sourceView = 'reservations-view';
             const allViews = document.querySelectorAll('.content-view');
             allViews.forEach(view => view.style.display = 'none');
@@ -382,7 +384,36 @@
                 }
             }
         }
-        
+
+        function submitBooking() {
+            if (selectedSlotsCount === 0) {
+                alert("Please select at least one time slot!");
+                return;
+            }
+            
+            if (sourceView === 'reservations-view' && currentEditingCardId) {
+                const selectedButtons = document.querySelectorAll('.time-slot-btn.selected');
+                let newTimesArray = [];
+                selectedButtons.forEach(btn => {
+                    newTimesArray.push(btn.innerText);
+                });
+                let newTimeStr = newTimesArray.join(', ');
+                const timeElement = document.getElementById(currentEditingCardId + '-time');
+                if (timeElement) {
+                    timeElement.innerText = newTimeStr;
+                }
+                alert("Success! Your time slot has been modified.");
+                document.getElementById('booking-selection-view').style.display = 'none';
+                document.getElementById('reservations-view').style.display = 'block';
+                currentEditingCardId = null;
+                const allSlots = document.querySelectorAll('.time-slot-btn');
+                allSlots.forEach(slot => slot.classList.remove('selected'));
+                selectedSlotsCount = 0;
+            } else {
+                window.location.href = "/student/payment";
+            }
+        }
+
         function cancelSelection() {
             const isConfirmed = confirm("Are you sure you want to cancel? Any unsaved modifications will be lost.");
             
@@ -393,14 +424,6 @@
                 allSlots.forEach(slot => slot.classList.remove('selected'));
                 selectedSlotsCount = 0;
             }
-        }
-        
-        function submitBooking() {
-            if (selectedSlotsCount === 0) {
-                alert("Please select at least one time slot!");
-                return;
-            }
-            window.location.href = "/student/payment";
         }
         
         function claimOffer() {
