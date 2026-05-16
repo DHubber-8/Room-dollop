@@ -144,7 +144,7 @@ rooms = [
     },
 ]
 
-next_room_id = 1
+next_room_id = 12
 
 
 def create_room(room_data):
