@@ -414,12 +414,9 @@
                 window.location.href = "/student/payment";
             }
         }
-// ==========================================
-        // FUNCTION: Smart Cancel Action
-        // ==========================================
+
         function handleCancelAction() {
             
-            // SCENARIO A: User is making a BRAND NEW booking from the Home Page
             if (sourceView === 'home-view') {
                 const isConfirmed = confirm("Are you sure you want to exit? Your time selections will be lost.");
                 if (isConfirmed) {
@@ -429,31 +426,23 @@
                 }
             } 
             
-            // SCENARIO B: User is modifying/canceling an EXISTING booking from Reservations
             else if (sourceView === 'reservations-view' && currentEditingCardId) {
                 const isConfirmed = confirm("Are you sure you want to PERMANENTLY CANCEL this upcoming reservation?");
                 
                 if (isConfirmed) {
-                    // 1. Find the exact card in the HTML using our memory tracker
                     const card = document.getElementById(currentEditingCardId);
                     
                     if (card) {
-                        // 2. Change the hidden category so the filter moves it to the "Cancelled" tab!
                         card.setAttribute('data-category', 'cancelled');
                         
-                        // 3. Visually update the status text to Red
                         const pTags = card.querySelectorAll('p');
                         pTags.forEach(p => {
                             if (p.innerHTML.includes('Status:')) {
                                 p.innerHTML = '<strong>Status:</strong> <span style="font-weight: bold; color: #d32f2f;">Cancelled</span>';
                             }
                         });
-
-                        // 4. Remove the old active buttons from the card
                         const buttons = card.querySelectorAll('button');
                         buttons.forEach(btn => btn.remove());
-                        
-                        // 5. Add the grayed-out "Locked" button so they know it's dead
                         const lockedBtn = document.createElement('button');
                         lockedBtn.className = 'solid-btn';
                         lockedBtn.style.cssText = 'margin-top: 15px; width: 100%; background-color: #f0f2f5; color: #a0aec0; border: 1px solid #e0e5ed; cursor: not-allowed;';
@@ -462,22 +451,19 @@
                         card.appendChild(lockedBtn);
                     }
 
-                    // 6. Hide the modify view and send them back to the Reservations page
                     document.getElementById('booking-selection-view').style.display = 'none';
                     document.getElementById('reservations-view').style.display = 'block';
                     
-                    // 7. Refresh the filter dropdown so the card instantly vanishes from "Upcoming"
                     const currentFilter = document.querySelector('.filter-dropdown select').value;
                     filterBookings(currentFilter);
                     
-                    // 8. Clean up memory
                     currentEditingCardId = null;
                     selectedSlotsCount = 0;
                     alert("Success! Your booking has been cancelled and moved to the Cancelled tab.");
                 }
             }
         }
-        
+
         function claimOffer() {
             alert("🎉 Offer Claimed! Priority access to Block C Study Rooms has been activated for your account.");
             const claimBtn = document.getElementById('claim-offer-btn');
